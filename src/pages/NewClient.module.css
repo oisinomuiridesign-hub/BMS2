@@ -1,0 +1,200 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--neutral-60);
+  padding: var(--space-lg) var(--space-xl);
+  gap: var(--space-md);
+}
+
+.topBar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.topBarLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pageTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xxl);
+  font-weight: 800;
+  color: var(--neutral-0);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.breadcrumbLink {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--primary-10);
+  text-decoration: none;
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+}
+
+.breadcrumbLink:hover { color: var(--primary-0); }
+
+.breadcrumbSep { color: var(--neutral-30); }
+
+.breadcrumbCurrent {
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  color: var(--neutral-20);
+}
+
+/* ── Form card ── */
+.formCard {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-float);
+  padding: var(--space-xl) var(--space-xl);
+  max-width: 680px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.formTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--primary-0);
+  text-align: center;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  color: var(--neutral-20);
+  font-weight: 600;
+}
+
+.selectWrapper {
+  position: relative;
+}
+
+.select {
+  width: 100%;
+  padding: 9px 32px 9px 12px;
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-s);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-20);
+  background: var(--neutral-100);
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.select:focus { border-color: var(--primary-10); }
+
+.selectArrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  color: var(--neutral-30);
+  pointer-events: none;
+}
+
+.searchWrapper {
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 9px 36px 9px 12px;
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-s);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-0);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.searchInput:focus { border-color: var(--primary-10); }
+
+.searchIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--neutral-30);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.formActions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--neutral-60);
+}
+
+.cancelBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 9px 20px;
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-s);
+  background: var(--neutral-100);
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--neutral-20);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cancelBtn:hover { background: var(--neutral-60); }
+
+.nextBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 9px 24px;
+  background: var(--primary-10);
+  border: none;
+  border-radius: var(--radius-s);
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neutral-100);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.nextBtn:hover { background: var(--primary-0); }

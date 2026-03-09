@@ -1,0 +1,28 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-100);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.active {
+  background-color: var(--alert-success-secondary);
+  color: var(--alert-success-primary);
+}
+
+.inactive {
+  background-color: var(--alert-error-secondary);
+  color: var(--alert-error-primary);
+}
+
+.pending {
+  background-color: var(--alert-warning-secondary);
+  color: var(--alert-warning-primary);
+}

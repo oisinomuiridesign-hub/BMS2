@@ -1,0 +1,45 @@
+.tabBar {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  border-bottom: 1.5px solid var(--neutral-50);
+}
+
+.tab {
+  position: relative;
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-dark-secondary);
+  transition: color 0.15s ease;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1.5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.tab:hover:not(.active) {
+  color: var(--neutral-20);
+}
+
+.active {
+  color: var(--primary-10);
+  font-weight: 600;
+}
+
+.active::after {
+  background-color: var(--primary-10);
+}

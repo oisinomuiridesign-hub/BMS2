@@ -1,0 +1,91 @@
+/* ===================================================
+   TopBar.module.css
+   =================================================== */
+
+.topBar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+/* ---- Left: Title + Breadcrumbs ---- */
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xxl);
+  font-weight: 800;
+  color: var(--neutral-0);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* ---- Breadcrumbs ---- */
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.breadcrumbHome {
+  display: flex;
+  align-items: center;
+  color: var(--neutral-30);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumbHome:hover {
+  color: var(--primary-10);
+}
+
+.breadcrumbSep {
+  color: var(--neutral-40);
+  font-size: var(--text-xs);
+  line-height: 1;
+  user-select: none;
+}
+
+.breadcrumbLink {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--primary-10);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumbLink:hover {
+  color: var(--primary-0);
+  text-decoration: underline;
+}
+
+.breadcrumbCurrent {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--neutral-30);
+  cursor: default;
+}
+
+/* ---- Right: Actions Slot ---- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+  padding-top: 4px;
+}
