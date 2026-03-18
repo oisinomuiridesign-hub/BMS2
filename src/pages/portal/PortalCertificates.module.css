@@ -1,0 +1,373 @@
+/* PortalCertificates.module.css */
+
+/* ─── Summary row ─────────────────────────────────────────────────────────── */
+.summaryRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+@media (max-width: 500px) {
+  .summaryRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summaryCard {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.summaryIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-m);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summaryIconHaccp {
+  background: var(--primary-50);
+  color: var(--primary-0);
+}
+
+.summaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.summaryNum {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--neutral-0);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summaryLabel {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  color: var(--text-dark-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* ─── Filter header ───────────────────────────────────────────────────────── */
+.filterHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.filterToggleBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neutral-100);
+  color: var(--neutral-20);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-100);
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms, border-color 120ms;
+}
+
+.filterToggleBtn:hover {
+  background: var(--neutral-60);
+  border-color: var(--neutral-40);
+}
+
+.filterCount {
+  background: var(--primary-10);
+  color: var(--neutral-100);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clearFiltersBtn {
+  background: transparent;
+  color: var(--alert-error-primary);
+  border: 1px solid var(--alert-error-primary);
+  border-radius: var(--radius-100);
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms;
+}
+
+.clearFiltersBtn:hover {
+  background: var(--alert-error-secondary);
+}
+
+.resultCount {
+  margin-left: auto;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  color: var(--neutral-30);
+  font-weight: 600;
+}
+
+/* ─── Filter panel ────────────────────────────────────────────────────────── */
+.filterPanel {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  background: var(--neutral-70);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  animation: fadeDown 150ms ease;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.filterLabel {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--neutral-30);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.filterSelect,
+.filterInput {
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-10);
+  background: var(--neutral-100);
+  outline: none;
+  transition: border-color 150ms;
+  appearance: none;
+}
+
+.filterSelect {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238ca0c4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+.filterSelect:focus,
+.filterInput:focus {
+  border-color: var(--primary-10);
+}
+
+/* ─── Empty state ─────────────────────────────────────────────────────────── */
+.emptyState {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--neutral-40);
+  font-size: var(--text-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* ─── Certificate list ────────────────────────────────────────────────────── */
+.certList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.certCard {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  transition: box-shadow 150ms, border-color 150ms;
+  flex-wrap: wrap;
+}
+
+.certCard:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--neutral-40);
+}
+
+.certIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-m);
+  background: var(--alert-success-secondary);
+  color: var(--alert-success-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.certInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.certTopRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.certNumber {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--neutral-0);
+}
+
+.haccpBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f0ebff;
+  color: #6b4fbb;
+  border: 1px solid #d4c8f5;
+  border-radius: var(--radius-100);
+  padding: 3px 9px;
+  font-family: var(--font-accent);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.certStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--alert-success-secondary);
+  color: var(--alert-success-primary);
+  border: 1px solid rgba(39, 174, 96, 0.2);
+  border-radius: var(--radius-100);
+  padding: 3px 9px;
+  font-family: var(--font-accent);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.certDate {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--neutral-10);
+}
+
+.certMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dark-secondary);
+  flex-wrap: wrap;
+}
+
+.certActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.viewBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-10);
+  color: var(--neutral-100);
+  border: none;
+  border-radius: var(--radius-m);
+  padding: 9px 16px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms;
+  white-space: nowrap;
+}
+
+.viewBtn:hover {
+  background: var(--primary-0);
+}
+
+.downloadBtnSmall {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neutral-100);
+  color: var(--neutral-20);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 9px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms;
+  white-space: nowrap;
+}
+
+.downloadBtnSmall:hover {
+  background: var(--neutral-60);
+  border-color: var(--neutral-40);
+}

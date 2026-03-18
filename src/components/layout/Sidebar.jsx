@@ -9,11 +9,13 @@ import {
   LogOut,
   ChevronLeft,
   ChevronDown,
+  Target,
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
 const NAV_ITEMS = [
   { label: 'Home', icon: LayoutDashboard, to: '/' },
+  { label: 'Leads', icon: Target, to: '/leads' },
   { label: 'Clients', icon: Users, to: '/clients' },
   { label: 'Department', icon: Building2, to: '/departments' },
   { label: 'Employees', icon: UserSquare, to: '/employees' },

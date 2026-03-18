@@ -1,0 +1,489 @@
+/* HomeApprovals.module.css — Pending Wash Approvals section on the BMS Home dashboard */
+
+/* ─── Section wrapper ─────────────────────────────────────────────────────── */
+.approvalSection {
+  background: var(--neutral-100);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  margin-bottom: 0; /* gap handled by parent flex/grid */
+}
+
+/* ─── Section header ──────────────────────────────────────────────────────── */
+.approvalHeader {
+  margin-bottom: 20px;
+}
+
+.approvalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.approvalTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--neutral-0);
+  margin: 0;
+}
+
+.pendingBadge {
+  background: var(--primary-10);
+  color: var(--neutral-100);
+  border-radius: 50%;
+  min-width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.approvalSubtitle {
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  color: var(--text-dark-secondary);
+  margin: 0;
+}
+
+/* ─── Empty state ─────────────────────────────────────────────────────────── */
+.emptyApprovals {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px 0;
+  color: var(--neutral-30);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+/* ─── Approval list ───────────────────────────────────────────────────────── */
+.approvalList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── Approval card ───────────────────────────────────────────────────────── */
+.approvalCard {
+  background: var(--neutral-70);
+  border: 1px solid var(--neutral-50);
+  border-left: 4px solid var(--primary-10);
+  border-radius: var(--radius-m);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 150ms;
+}
+
+.approvalCard:hover {
+  box-shadow: var(--shadow-card);
+}
+
+/* ─── Card header ─────────────────────────────────────────────────────────── */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.cardHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.clientName {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--neutral-0);
+}
+
+.statusPip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-radius: var(--radius-100);
+  border: 1px solid;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+.certGeneratedPill {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--alert-success-primary);
+  background: var(--alert-success-secondary);
+  border: 1px solid rgba(39, 174, 96, 0.2);
+  border-radius: var(--radius-100);
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* ─── Meta row ────────────────────────────────────────────────────────────── */
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  color: var(--text-dark-secondary);
+  font-weight: 500;
+}
+
+/* ─── Vehicles row ────────────────────────────────────────────────────────── */
+.vehiclesRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vehicleStat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.vehicleStatDivider {
+  width: 1px;
+  height: 14px;
+  background: var(--neutral-40);
+}
+
+/* ─── Exception note ──────────────────────────────────────────────────────── */
+.exceptionNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  background: var(--alert-warning-secondary);
+  border: 1px solid rgba(224, 153, 21, 0.2);
+  border-radius: var(--radius-s);
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--neutral-20);
+  line-height: 1.5;
+}
+
+/* ─── Review notes (rejected) ─────────────────────────────────────────────── */
+.reviewNotesBox {
+  background: var(--alert-error-secondary);
+  border: 1px solid rgba(239, 100, 97, 0.2);
+  border-radius: var(--radius-s);
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--alert-error-primary);
+  line-height: 1.5;
+}
+
+/* ─── Card actions ────────────────────────────────────────────────────────── */
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.approveBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-10);
+  color: var(--neutral-100);
+  border: none;
+  border-radius: var(--radius-m);
+  padding: 9px 18px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms;
+  white-space: nowrap;
+}
+
+.approveBtn:hover {
+  background: var(--primary-0);
+}
+
+.rejectBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neutral-100);
+  color: var(--neutral-30);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 9px 16px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms, color 150ms;
+  white-space: nowrap;
+}
+
+.rejectBtn:hover {
+  background: var(--alert-error-secondary);
+  border-color: var(--alert-error-primary);
+  color: var(--alert-error-primary);
+}
+
+/* ─── Modal overlay ───────────────────────────────────────────────────────── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 11, 20, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 8000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* ─── Confirm modal ───────────────────────────────────────────────────────── */
+.confirmModal {
+  position: relative;
+  background: var(--neutral-100);
+  border-radius: var(--radius-l);
+  box-shadow: 0 8px 40px rgba(7, 36, 89, 0.2);
+  padding: 32px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: popIn 180ms ease;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modalClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--neutral-50);
+  background: var(--neutral-70);
+  color: var(--neutral-30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms;
+}
+
+.modalClose:hover {
+  background: var(--neutral-60);
+  color: var(--neutral-10);
+}
+
+.confirmIcon {
+  display: flex;
+  justify-content: center;
+}
+
+.confirmTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--neutral-0);
+  margin: 0;
+  text-align: center;
+}
+
+.confirmDesc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-dark-secondary);
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.confirmDetails {
+  background: var(--neutral-70);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+
+.confirmRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--neutral-60);
+  font-size: var(--text-sm);
+}
+
+.confirmRow:last-child {
+  border-bottom: none;
+}
+
+.confirmRow span:first-child {
+  color: var(--text-dark-secondary);
+  font-weight: 500;
+}
+
+.confirmRow span:last-child {
+  font-weight: 600;
+  color: var(--neutral-10);
+}
+
+.notesTextarea {
+  width: 100%;
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-10);
+  background: var(--neutral-100);
+  resize: vertical;
+  outline: none;
+  transition: border-color 150ms;
+  box-sizing: border-box;
+}
+
+.notesTextarea:focus {
+  border-color: var(--primary-10);
+}
+
+.confirmActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.confirmCancelBtn {
+  background: var(--neutral-100);
+  color: var(--neutral-20);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.confirmCancelBtn:hover {
+  background: var(--neutral-60);
+}
+
+.confirmApproveBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--primary-10);
+  color: var(--neutral-100);
+  border: none;
+  border-radius: var(--radius-m);
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.confirmApproveBtn:hover {
+  background: var(--primary-0);
+}
+
+.confirmRejectBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--alert-error-primary);
+  color: var(--neutral-100);
+  border: none;
+  border-radius: var(--radius-m);
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.confirmRejectBtn:hover {
+  background: #d9504d;
+}
+
+.confirmRejectBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ─── Toast stack ─────────────────────────────────────────────────────────── */
+.toastStack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--neutral-10);
+  color: var(--text-light-primary);
+  border-radius: var(--radius-m);
+  padding: 12px 18px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(7, 36, 89, 0.2);
+  max-width: 380px;
+  animation: slideInToast 250ms ease;
+}
+
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

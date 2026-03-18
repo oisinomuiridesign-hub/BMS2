@@ -1,0 +1,61 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-100);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* CAPTURED — Blue-grey (form submitted, no action yet) */
+.captured {
+  background-color: #eef1f8;
+  color: #344667;
+}
+
+/* APPROVED — Teal (planner approved, Form 2 sent) */
+.approved {
+  background-color: #e0f5f2;
+  color: #0d8c78;
+}
+
+/* DETAILS_SUBMITTED — Indigo (Form 2 in, awaiting BTC review) */
+.detailsSubmitted {
+  background-color: #eeebff;
+  color: #5b3fcf;
+}
+
+/* UNDER_REVIEW — Amber (BTC team reviewing) */
+.underReview {
+  background-color: var(--alert-warning-secondary);
+  color: var(--alert-warning-primary);
+}
+
+/* PROPOSAL_SENT — Primary blue (quote sent) */
+.proposalSent {
+  background-color: #e2f3f8;
+  color: #0082ca;
+}
+
+/* AWAITING_ACCEPTANCE — Orange (waiting for signature) */
+.awaitingAcceptance {
+  background-color: #fff0e5;
+  color: #c05e00;
+}
+
+/* CONVERTED — Green success */
+.converted {
+  background-color: var(--alert-success-secondary);
+  color: var(--alert-success-primary);
+}
+
+/* LOST — Red error */
+.lost {
+  background-color: var(--alert-error-secondary);
+  color: var(--alert-error-primary);
+}

@@ -1,0 +1,233 @@
+/* PortalHome — dashboard/landing page for each portal */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ─── Welcome banner ─────────────────────────────────────────────────────────── */
+.welcomeBanner {
+  background: linear-gradient(135deg, var(--primary-0) 0%, var(--primary-10) 100%);
+  border-radius: var(--radius-l);
+  padding: var(--space-xl) var(--space-xl);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.welcomeText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.welcomeLabel {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.welcomeTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xxl);
+  font-weight: 800;
+  color: var(--neutral-100);
+  line-height: 1.15;
+}
+
+.welcomeDesc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 440px;
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.stageBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-m);
+  padding: 12px 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.stageBadgeLabel {
+  font-family: var(--font-accent);
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.stageBadgeValue {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--neutral-100);
+}
+
+/* ─── Section cards ──────────────────────────────────────────────────────────── */
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+}
+
+@media (min-width: 600px) {
+  .cardGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 900px) {
+  .cardGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-l);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 150ms ease, border-color 150ms ease, transform 100ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--primary-20);
+  transform: translateY(-1px);
+}
+
+.cardLocked {
+  background: var(--neutral-70);
+  border-style: dashed;
+  cursor: default;
+}
+
+.cardLocked:hover {
+  box-shadow: none;
+  border-color: var(--neutral-50);
+  transform: none;
+}
+
+.cardIconWrap {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-m);
+  background: var(--neutral-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neutral-40);
+}
+
+.cardIconWrapActive {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-m);
+  background: var(--primary-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-10);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.cardLabel {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--neutral-10);
+}
+
+.cardLocked .cardLabel {
+  color: var(--neutral-30);
+}
+
+.cardDesc {
+  font-size: var(--text-sm);
+  color: var(--text-dark-secondary);
+  line-height: 1.4;
+}
+
+.cardArrow {
+  color: var(--neutral-40);
+  align-self: flex-end;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.card:hover .cardArrow {
+  color: var(--primary-10);
+  transform: translateX(2px);
+}
+
+.lockedTag {
+  font-family: var(--font-accent);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--neutral-40);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Contact box ────────────────────────────────────────────────────────────── */
+.contactBox {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: var(--space-md);
+}
+
+.contactTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neutral-10);
+  margin-bottom: 4px;
+}
+
+.contactDesc {
+  font-size: var(--text-sm);
+  color: var(--text-dark-secondary);
+  line-height: 1.5;
+}
+
+.contactLink {
+  color: var(--primary-10);
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.contactLink:hover {
+  color: var(--primary-0);
+}

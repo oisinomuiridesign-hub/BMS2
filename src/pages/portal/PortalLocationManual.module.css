@@ -1,0 +1,745 @@
+/* ─── Layout: two-column with sticky section nav ───────────────────────────── */
+.layout {
+  display: flex;
+  gap: var(--space-xl);
+  align-items: flex-start;
+}
+
+/* ─── Sticky section nav (left, desktop only) ──────────────────────────────── */
+.sectionNav {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 24px;
+}
+
+.sectionNavTitle {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--neutral-30);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: var(--space-sm);
+  padding: 0 var(--space-sm);
+}
+
+.sectionNavList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sectionNavItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-m);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--neutral-30);
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  transition: background 120ms, color 120ms;
+}
+
+.sectionNavItem:hover {
+  background: var(--neutral-60);
+  color: var(--neutral-10);
+}
+
+.sectionNavItemActive {
+  background: var(--primary-60);
+  color: var(--primary-0);
+  font-weight: 600;
+}
+
+.sectionNavDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 2px solid var(--neutral-40);
+  flex-shrink: 0;
+  transition: background 120ms, border-color 120ms;
+}
+
+.sectionNavItemActive .sectionNavDot {
+  background: var(--primary-10);
+  border-color: var(--primary-10);
+}
+
+.sectionNavDotDone {
+  background: var(--alert-success-primary);
+  border-color: var(--alert-success-primary);
+}
+
+/* ─── Main content column ───────────────────────────────────────────────────── */
+.formBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ─── Status bar ────────────────────────────────────────────────────────────── */
+.statusBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 12px 16px;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.statusBarLabel {
+  font-weight: 600;
+  color: var(--neutral-20);
+  margin-right: 4px;
+}
+
+.statusBarBadge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: var(--radius-100);
+  padding: 4px 10px;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.statusNot_started {
+  background: var(--neutral-60);
+  color: var(--neutral-30);
+}
+
+.statusIn_progress {
+  background: var(--alert-warning-secondary);
+  color: var(--alert-warning-primary);
+}
+
+.statusSubmitted {
+  background: var(--primary-60);
+  color: var(--primary-0);
+}
+
+.statusApproved {
+  background: var(--alert-success-secondary);
+  color: var(--alert-success-primary);
+}
+
+.statusBarMeta {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--text-dark-secondary);
+}
+
+/* ─── Approved green banner ─────────────────────────────────────────────────── */
+.approvedBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  background: var(--alert-success-secondary);
+  border: 1px solid rgba(39, 174, 96, 0.25);
+  border-radius: var(--radius-m);
+  padding: var(--space-md);
+  font-size: var(--text-sm);
+  color: #1a7a45;
+  line-height: 1.5;
+}
+
+.approvedBanner strong {
+  font-weight: 700;
+}
+
+/* ─── Section card ──────────────────────────────────────────────────────────── */
+.sectionCard {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  scroll-margin-top: 24px;
+}
+
+.sectionCardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 14px 16px;
+  background: var(--neutral-70);
+  border-bottom: 1px solid var(--neutral-50);
+}
+
+.sectionCardNum {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--neutral-40);
+  color: var(--neutral-100);
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sectionCardNumDone {
+  background: var(--alert-success-primary);
+}
+
+.sectionCardTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neutral-10);
+}
+
+.sectionCardDoneTag {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--alert-success-primary);
+}
+
+.sectionCardBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ─── Form field ────────────────────────────────────────────────────────────── */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-family: var(--font-accent);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-20);
+}
+
+.fieldRequired {
+  color: var(--alert-error-primary);
+  margin-left: 2px;
+}
+
+.fieldInput {
+  width: 100%;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-10);
+  outline: none;
+  transition: border-color 150ms;
+  box-sizing: border-box;
+}
+
+.fieldInput:focus {
+  border-color: var(--primary-10);
+  box-shadow: 0 0 0 3px rgba(0, 130, 202, 0.1);
+}
+
+.fieldInput:disabled,
+.fieldInput[disabled] {
+  background: var(--neutral-70);
+  color: var(--neutral-30);
+  cursor: default;
+}
+
+.fieldTextarea {
+  width: 100%;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-10);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 150ms;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.fieldTextarea:focus {
+  border-color: var(--primary-10);
+  box-shadow: 0 0 0 3px rgba(0, 130, 202, 0.1);
+}
+
+.fieldTextarea:disabled {
+  background: var(--neutral-70);
+  color: var(--neutral-30);
+  cursor: default;
+}
+
+/* ─── Hours grid ────────────────────────────────────────────────────────────── */
+.hoursGrid {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 6px 12px;
+  align-items: center;
+}
+
+.hoursDay {
+  font-family: var(--font-accent);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-20);
+}
+
+.hoursInputRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hoursInput {
+  width: 90px;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-s);
+  padding: 7px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--neutral-10);
+  outline: none;
+  transition: border-color 150ms;
+  box-sizing: border-box;
+}
+
+.hoursInput:focus {
+  border-color: var(--primary-10);
+}
+
+.hoursInput:disabled {
+  background: var(--neutral-70);
+  color: var(--neutral-30);
+}
+
+.hoursSep {
+  font-size: 12px;
+  color: var(--neutral-30);
+}
+
+.hoursClosedToggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--neutral-30);
+  cursor: pointer;
+  user-select: none;
+}
+
+.hoursClosedToggle input {
+  accent-color: var(--primary-10);
+}
+
+/* ─── Contacts list ─────────────────────────────────────────────────────────── */
+.contactsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.contactCard {
+  background: var(--neutral-70);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  position: relative;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+@media (max-width: 600px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contactRemoveBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--neutral-30);
+  padding: 4px;
+  border-radius: var(--radius-s);
+  display: flex;
+  align-items: center;
+  transition: color 120ms;
+}
+
+.contactRemoveBtn:hover {
+  color: var(--alert-error-primary);
+}
+
+.addContactBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neutral-100);
+  border: 1px dashed var(--neutral-40);
+  border-radius: var(--radius-m);
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--neutral-30);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+  width: 100%;
+  justify-content: center;
+}
+
+.addContactBtn:hover:not(:disabled) {
+  border-color: var(--primary-10);
+  color: var(--primary-10);
+}
+
+.addContactBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ─── Section row — two columns ─────────────────────────────────────────────── */
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+@media (max-width: 600px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Submitted read-only overlay hint ──────────────────────────────────────── */
+.readOnlyHint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--neutral-30);
+  font-style: italic;
+  margin-top: -8px;
+}
+
+/* ─── Submit / save row ─────────────────────────────────────────────────────── */
+.submitRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-10);
+  color: var(--neutral-100);
+  border: none;
+  border-radius: var(--radius-m);
+  padding: 11px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--primary-0);
+}
+
+.submitBtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.saveDraftBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neutral-100);
+  color: var(--neutral-20);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 11px 18px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.saveDraftBtn:hover:not(:disabled) {
+  background: var(--neutral-60);
+}
+
+.saveDraftBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.submitHint {
+  font-size: 12px;
+  color: var(--text-dark-secondary);
+  margin-left: auto;
+}
+
+/* ─── Management review panel ───────────────────────────────────────────────── */
+.mgmtPanel {
+  background: var(--neutral-100);
+  border: 2px solid var(--primary-50);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+
+.mgmtPanelHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 14px 16px;
+  background: var(--primary-60);
+  border-bottom: 1px solid var(--primary-50);
+}
+
+.mgmtPanelTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--primary-0);
+}
+
+.mgmtPanelBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.mgmtNotesLabel {
+  font-family: var(--font-accent);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-20);
+  margin-bottom: 4px;
+}
+
+.mgmtTextarea {
+  width: 100%;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-10);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 150ms;
+  box-sizing: border-box;
+}
+
+.mgmtTextarea:focus {
+  border-color: var(--primary-10);
+}
+
+.mgmtActions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.mgmtApproveBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--alert-success-primary);
+  color: var(--neutral-100);
+  border: none;
+  border-radius: var(--radius-m);
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 150ms;
+}
+
+.mgmtApproveBtn:hover {
+  opacity: 0.88;
+}
+
+.mgmtRejectBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neutral-100);
+  color: var(--alert-error-primary);
+  border: 1px solid var(--alert-error-primary);
+  border-radius: var(--radius-m);
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.mgmtRejectBtn:hover {
+  background: var(--alert-error-secondary);
+}
+
+.mgmtSuccess {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--alert-success-secondary);
+  border: 1px solid rgba(39, 174, 96, 0.2);
+  border-radius: var(--radius-m);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--alert-success-primary);
+  font-weight: 600;
+}
+
+/* ─── Confirm modal overlay ─────────────────────────────────────────────────── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 11, 20, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-md);
+}
+
+.modalCard {
+  background: var(--neutral-100);
+  border-radius: var(--radius-l);
+  padding: var(--space-xl);
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(6, 11, 20, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.modalIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--alert-warning-secondary);
+  color: var(--alert-warning-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-xs);
+}
+
+.modalTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--neutral-10);
+  text-align: center;
+}
+
+.modalText {
+  font-size: var(--text-sm);
+  color: var(--text-dark-secondary);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+}
+
+.modalCancelBtn {
+  background: var(--neutral-100);
+  color: var(--neutral-20);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 10px 18px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modalCancelBtn:hover {
+  background: var(--neutral-60);
+}
+
+.modalSubmitBtn {
+  background: var(--primary-10);
+  color: var(--neutral-100);
+  border: none;
+  border-radius: var(--radius-m);
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.modalSubmitBtn:hover {
+  background: var(--primary-0);
+}
+
+/* ─── Responsive: hide section nav on small screens ────────────────────────── */
+@media (max-width: 767px) {
+  .sectionNav {
+    display: none;
+  }
+
+  .layout {
+    gap: 0;
+  }
+}

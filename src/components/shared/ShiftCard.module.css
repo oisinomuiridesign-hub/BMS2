@@ -1,0 +1,199 @@
+.shiftCard {
+  border-bottom: 1px solid var(--neutral-60);
+}
+
+.shiftCard:last-child {
+  border-bottom: none;
+}
+
+.shiftCardPast {
+  opacity: 0.72;
+}
+
+.shiftCardPast:hover {
+  opacity: 1;
+}
+
+/* ── Header row ── */
+.shiftHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 8px;
+  cursor: pointer;
+  transition: background 0.12s;
+  user-select: none;
+  outline: none;
+}
+
+.shiftHeader:hover,
+.shiftHeader:focus-visible {
+  background: var(--neutral-70);
+}
+
+/* ── Date badge ── */
+.dateBadge {
+  width: 40px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.dateBadgeDay {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--primary-10);
+}
+
+.dateBadgeMonth {
+  font-family: var(--font-accent);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--neutral-30);
+  letter-spacing: 0.04em;
+}
+
+/* ── Location title ── */
+.headerMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.location {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neutral-0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* ── Right side: status + link + chevron ── */
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.statusBadge {
+  padding: 2px 10px;
+  border-radius: var(--radius-100);
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.statusUpcoming {
+  background: var(--primary-50);
+  color: var(--primary-0);
+}
+
+.statusCompleted {
+  background: var(--alert-success-secondary);
+  color: var(--alert-success-primary);
+}
+
+.statusCancelled {
+  background: var(--alert-error-secondary);
+  color: var(--alert-error-primary);
+}
+
+/* ── Shiftbase link button (collapsed row) ── */
+.linkBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-s);
+  color: var(--neutral-30);
+  text-decoration: none;
+  transition: color 0.12s, background 0.12s;
+  flex-shrink: 0;
+}
+
+.linkBtn:hover {
+  color: var(--primary-10);
+  background: var(--primary-60);
+}
+
+.chevron {
+  color: var(--neutral-30);
+  flex-shrink: 0;
+  transition: color 0.12s;
+}
+
+.shiftHeader:hover .chevron {
+  color: var(--neutral-20);
+}
+
+/* ── Expanded details panel ── */
+.shiftDetails {
+  padding: 12px 8px 14px 62px; /* 62px = 40px badge + 14px gap + 8px card padding */
+  border-top: 1px solid var(--neutral-60);
+  background: var(--neutral-80);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+
+.detailRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailFull {
+  grid-column: 1 / -1;
+}
+
+.detailLabel {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  color: var(--text-dark-secondary);
+  font-weight: 500;
+}
+
+.detailValue {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-10);
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* ── Open in Shiftbase button (expanded) ── */
+.shiftbaseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--primary-10);
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--primary-10);
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+  cursor: pointer;
+}
+
+.shiftbaseBtn:hover {
+  background: var(--primary-10);
+  color: var(--neutral-100);
+}

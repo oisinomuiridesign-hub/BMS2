@@ -1,0 +1,285 @@
+/* PortalInvoices.module.css */
+
+/* ─── Summary bar ─────────────────────────────────────────────────────────── */
+.summaryBar {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.summaryChip {
+  flex: 1;
+  min-width: 140px;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summaryChipLabel {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--neutral-30);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summaryChipAmount {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--neutral-10);
+  line-height: 1.1;
+}
+
+.summaryChipSub {
+  font-size: 12px;
+  color: var(--text-dark-secondary);
+}
+
+.summaryChipPaid .summaryChipAmount {
+  color: var(--alert-success-primary);
+}
+
+.summaryChipOverdue .summaryChipAmount {
+  color: var(--alert-error-primary);
+}
+
+/* ─── Filter tabs ─────────────────────────────────────────────────────────── */
+.filterTabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neutral-100);
+  color: var(--neutral-30);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-100);
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms, color 150ms;
+}
+
+.filterTab:hover {
+  background: var(--neutral-60);
+  color: var(--neutral-20);
+}
+
+.filterTabActive {
+  background: var(--neutral-10);
+  color: var(--neutral-100);
+  border-color: var(--neutral-10);
+}
+
+.filterTabActive:hover {
+  background: var(--neutral-20);
+  color: var(--neutral-100);
+}
+
+.filterTabCount {
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+  border-radius: var(--radius-100);
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.filterTabActive .filterTabCount {
+  background: rgba(255,255,255,0.18);
+}
+
+/* ─── Invoice table ───────────────────────────────────────────────────────── */
+.invoiceTable {
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+}
+
+.invoiceTableHead {
+  display: grid;
+  grid-template-columns: 1.4fr 1.2fr 0.9fr 0.9fr 1fr 0.8fr 0.8fr;
+  gap: var(--space-sm);
+  align-items: center;
+  padding: 10px 20px;
+  background: var(--neutral-70);
+  border-bottom: 1px solid var(--neutral-50);
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--neutral-30);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.invoiceRow {
+  display: grid;
+  grid-template-columns: 1.4fr 1.2fr 0.9fr 0.9fr 1fr 0.8fr 0.8fr;
+  gap: var(--space-sm);
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--neutral-60);
+  transition: background 120ms;
+}
+
+.invoiceRow:last-child {
+  border-bottom: none;
+}
+
+.invoiceRow:hover {
+  background: var(--neutral-70);
+}
+
+.invoiceRowOverdue {
+  background: rgba(239, 100, 97, 0.03);
+}
+
+.invoiceRowOverdue:hover {
+  background: rgba(239, 100, 97, 0.07);
+}
+
+/* ─── Invoice number cell ─────────────────────────────────────────────────── */
+.invoiceNumberCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.invoiceNumber {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neutral-10);
+}
+
+.moneybirdRef {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--neutral-30);
+}
+
+/* ─── Period cell ─────────────────────────────────────────────────────────── */
+.periodCell {
+  font-size: var(--text-sm);
+  color: var(--neutral-20);
+}
+
+.periodSub {
+  font-size: 11px;
+  color: var(--text-dark-secondary);
+  margin-top: 1px;
+}
+
+/* ─── Date cells ──────────────────────────────────────────────────────────── */
+.dateCell {
+  font-size: var(--text-sm);
+  color: var(--neutral-20);
+}
+
+.dateCellOverdue {
+  color: var(--alert-error-primary);
+  font-weight: 600;
+}
+
+/* ─── Amount cell ─────────────────────────────────────────────────────────── */
+.amountCell {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neutral-10);
+  white-space: nowrap;
+}
+
+.amountExVat {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--neutral-30);
+  margin-top: 1px;
+}
+
+/* ─── Status pip ──────────────────────────────────────────────────────────── */
+.statusPip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-accent);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--radius-100);
+  border: 1px solid;
+  padding: 3px 9px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.statusPaid {
+  color: var(--alert-success-primary);
+  background: var(--alert-success-secondary);
+  border-color: rgba(39, 174, 96, 0.25);
+}
+
+.statusPending {
+  color: var(--primary-10);
+  background: var(--primary-60);
+  border-color: var(--primary-50);
+}
+
+.statusOverdue {
+  color: var(--alert-error-primary);
+  background: var(--alert-error-secondary);
+  border-color: rgba(239, 100, 97, 0.25);
+}
+
+/* ─── Download button ─────────────────────────────────────────────────────── */
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--neutral-60);
+  color: var(--neutral-20);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-s);
+  padding: 6px 11px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms;
+  white-space: nowrap;
+}
+
+.downloadBtn:hover {
+  background: var(--neutral-50);
+}
+
+/* ─── Empty state ─────────────────────────────────────────────────────────── */
+.emptyState {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--neutral-30);
+  font-size: var(--text-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.emptyIcon {
+  color: var(--neutral-40);
+  margin-bottom: 4px;
+}
