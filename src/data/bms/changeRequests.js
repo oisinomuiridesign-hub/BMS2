@@ -4,6 +4,20 @@
 
 export const changeRequests = [
 
+  // ─── nt-001: De Groot Tankvervoer — Agreement awaiting client signature ───────
+  {
+    id: 'nt-001',
+    type: 'AGREEMENT_ATTENTION',
+    requestedBy: 'Sophie Janssen',
+    requestedAt: '2026-03-17T10:00:00Z',
+    status: 'PENDING',
+    clientName: 'De Groot Tankvervoer B.V.',
+    locationPath: '/leads/lead-004',
+    locationLabel: 'Leads → De Groot Tankvervoer B.V.',
+    agreementStatus: 'AWAITING_ACCEPTANCE',
+    description: 'Agreement sent 28 Feb — awaiting client signature.',
+  },
+
   // ─── cr-001: Van den Berg Transport — Invoice Email ───────────────────────────
   {
     id: 'cr-001',

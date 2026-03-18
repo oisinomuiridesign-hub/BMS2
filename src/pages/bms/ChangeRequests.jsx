@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, XCircle, Clock, ChevronRight, ArrowRight, CheckCheck } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, ChevronRight, ArrowRight, CheckCheck, FileText } from 'lucide-react';
 import { useChangeRequests } from '../../context/ChangeRequestsContext';
 import styles from './ChangeRequests.module.css';
 
@@ -126,46 +126,82 @@ export default function ChangeRequests() {
 
 // ─── Row component ────────────────────────────────────────────────────────────
 
+const AGREEMENT_STATUS_LABELS = {
+  AWAITING_ACCEPTANCE: 'Awaiting Acceptance',
+  DRAFT: 'Draft',
+  ACCEPTED: 'Accepted',
+  AMENDED: 'Amendment Requested',
+  REJECTED: 'Rejected',
+};
+
 function RequestRow({ req, onRowClick, onApprove, onReject }) {
+  const isAgreementAttention = req.type === 'AGREEMENT_ATTENTION';
   const isPending  = req.status === 'PENDING';
   const isApproved = req.status === 'APPROVED';
+  const isClickable = isAgreementAttention || isPending;
 
   return (
     <div
-      className={`${styles.row} ${isPending ? styles.rowClickable : ''}`}
-      onClick={isPending ? onRowClick : undefined}
-      role={isPending ? 'button' : undefined}
-      tabIndex={isPending ? 0 : undefined}
-      onKeyDown={isPending ? (e) => e.key === 'Enter' && onRowClick() : undefined}
+      className={`${styles.row} ${isClickable ? styles.rowClickable : ''}`}
+      onClick={isClickable ? onRowClick : undefined}
+      role={isClickable ? 'button' : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onKeyDown={isClickable ? (e) => e.key === 'Enter' && onRowClick() : undefined}
     >
       {/* Col 1 — Client / Location */}
       <div className={styles.colLocation}>
         <div className={styles.clientName}>{req.clientName}</div>
         <div className={styles.locationPath}>
           {req.locationLabel}
-          {isPending && <ChevronRight size={12} strokeWidth={2} className={styles.chevron} />}
+          {isClickable && <ChevronRight size={12} strokeWidth={2} className={styles.chevron} />}
         </div>
         <div className={styles.requester}>
           {req.requestedBy} &middot; {formatDate(req.requestedAt)}
         </div>
       </div>
 
-      {/* Col 2 — Requested change */}
+      {/* Col 2 — Change detail or Agreement info */}
       <div className={styles.colChange}>
-        <span className={styles.fieldLabel}>{req.field}</span>
-        <div className={styles.changeValues}>
-          <span className={styles.currentVal}>{req.currentValue}</span>
-          <ArrowRight size={13} strokeWidth={2} className={styles.arrow} />
-          <span className={styles.requestedVal}>{req.requestedValue}</span>
-        </div>
-        {req.description && (
-          <p className={styles.changeDesc}>{req.description}</p>
+        {isAgreementAttention ? (
+          <>
+            <span className={styles.fieldLabel}>Agreement</span>
+            <div>
+              <span className={styles.agreementStatusPill}>
+                {AGREEMENT_STATUS_LABELS[req.agreementStatus] ?? req.agreementStatus}
+              </span>
+            </div>
+            {req.description && (
+              <p className={styles.changeDesc}>{req.description}</p>
+            )}
+          </>
+        ) : (
+          <>
+            <span className={styles.fieldLabel}>{req.field}</span>
+            <div className={styles.changeValues}>
+              <span className={styles.currentVal}>{req.currentValue}</span>
+              <ArrowRight size={13} strokeWidth={2} className={styles.arrow} />
+              <span className={styles.requestedVal}>{req.requestedValue}</span>
+            </div>
+            {req.description && (
+              <p className={styles.changeDesc}>{req.description}</p>
+            )}
+          </>
         )}
       </div>
 
       {/* Col 3 — Actions */}
       <div className={styles.colActions} onClick={(e) => e.stopPropagation()}>
-        {isPending ? (
+        {isAgreementAttention ? (
+          <button
+            type="button"
+            className={styles.viewBtn}
+            onClick={onRowClick}
+            title="View agreement"
+          >
+            <FileText size={14} strokeWidth={2} />
+            View Agreement
+          </button>
+        ) : isPending ? (
           <div className={styles.actionBtns}>
             <button
               type="button"

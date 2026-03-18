@@ -332,6 +332,41 @@
   padding-right: 2px;
 }
 
+/* ── Agreement attention ── */
+.agreementStatusPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-s);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  background: var(--alert-warning-secondary);
+  color: var(--alert-warning-primary);
+}
+
+.viewBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--primary-60);
+  color: var(--primary-0);
+  border: 1px solid rgba(0, 130, 202, 0.25);
+  border-radius: var(--radius-m);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.viewBtn:hover {
+  background: var(--primary-50);
+  box-shadow: 0 2px 8px rgba(0, 130, 202, 0.15);
+}
+
 /* ── Empty state ── */
 .emptyState {
   display: flex;
