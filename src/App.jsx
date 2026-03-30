@@ -1,10 +1,13 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { PortalAuthProvider } from './context/PortalAuthContext'
 import { ChangeRequestsProvider } from './context/ChangeRequestsContext'
+import { NotificationsProvider } from './context/NotificationsContext'
 import { DataProvider } from './context/DataContext'
+import { BMSAuthProvider, useBMSAuth } from './context/BMSAuthContext'
 
 // ── BMS pages ────────────────────────────────────────────────────────────────
 import AppShell from './components/layout/AppShell'
+import Login from './pages/bms/Login'
 import Home from './pages/bms/Home'
 import ClientsOverview from './pages/bms/ClientsOverview'
 import ClientProfile from './pages/bms/ClientProfile'
@@ -17,6 +20,7 @@ import NewEmployee from './pages/bms/NewEmployee'
 import EmployeeView from './pages/bms/EmployeeView'
 import Settings from './pages/bms/Settings'
 import ChangeRequests from './pages/bms/ChangeRequests'
+import Notifications from './pages/bms/Notifications'
 import LeadsOverview from './pages/leads/LeadsOverview'
 import LeadProfile from './pages/leads/LeadProfile'
 
@@ -32,12 +36,23 @@ import PortalCertificates from './pages/portal/PortalCertificates'
 import PortalEmployeeDashboard from './pages/portal/PortalEmployeeDashboard'
 import PortalInvoices from './pages/portal/PortalInvoices'
 
+function BMSProtected({ children }) {
+  const { user } = useBMSAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  return <AppShell>{children}</AppShell>;
+}
+
 export default function App() {
   return (
     <DataProvider>
     <ChangeRequestsProvider>
+    <BMSAuthProvider>
+    <NotificationsProvider>
     <PortalAuthProvider>
       <Routes>
+        {/* ── BMS login — no shell ───────────────────────────────────────── */}
+        <Route path="/login" element={<Login />} />
+
         {/* ── Portal routes — own layout, NO BMS sidebar ─────────────────── */}
         <Route path="/portal/login" element={<PortalLogin />} />
 
@@ -58,7 +73,7 @@ export default function App() {
 
         {/* ── BMS routes — wrapped in AppShell (dark sidebar layout) ──────── */}
         <Route path="/*" element={
-          <AppShell>
+          <BMSProtected>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/leads" element={<LeadsOverview />} />
@@ -77,13 +92,16 @@ export default function App() {
               <Route path="/employees/:id/shifts" element={<EmployeeView initialTab="shifts" />} />
               <Route path="/employees/:id" element={<EmployeeView />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/change-requests" element={<ChangeRequests />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/change-requests" element={<Navigate to="/notifications" replace />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </AppShell>
+          </BMSProtected>
         } />
       </Routes>
     </PortalAuthProvider>
+    </NotificationsProvider>
+    </BMSAuthProvider>
     </ChangeRequestsProvider>
     </DataProvider>
   )

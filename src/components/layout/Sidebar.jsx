@@ -11,6 +11,7 @@ import {
   ChevronDown,
   Target,
 } from 'lucide-react';
+import { useBMSAuth } from '../../context/BMSAuthContext';
 import styles from './Sidebar.module.css';
 
 const NAV_ITEMS = [
@@ -27,6 +28,7 @@ const BOTTOM_NAV = [
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { logout } = useBMSAuth();
 
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
@@ -89,7 +91,7 @@ export default function Sidebar() {
           type="button"
           data-label="Expand"
           className={`${styles.navItem} ${styles.logoutBtn}`}
-          onClick={() => {}}
+          onClick={logout}
           aria-label="Logout"
         >
           <LogOut className={styles.navIcon} size={18} strokeWidth={1.8} />

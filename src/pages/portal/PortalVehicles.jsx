@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import {
   Truck,
@@ -13,6 +13,11 @@ import {
   Info,
   AlertTriangle,
   CheckCircle,
+  Upload,
+  Download,
+  FileText,
+  ArrowLeft,
+  AlertCircle,
 } from 'lucide-react';
 import { isStageAvailable } from '../../components/portal/PortalShell';
 import { findAgreementByPortalId } from '../../data/portal/agreements';
@@ -44,6 +49,92 @@ const EMPTY_FORM = {
   washType: 'STANDARD',
   notes: '',
 };
+
+const VALID_VEHICLE_TYPES = new Set(VEHICLE_TYPE_OPTIONS.map((o) => o.value));
+const VALID_WASH_TYPES = new Set(WASH_TYPE_OPTIONS.map((o) => o.value));
+
+const CSV_TEMPLATE = [
+  'licensePlate,vehicleType,washType,notes',
+  '# Valid vehicleType: TRUCK, TRAILER, TANKER, REFRIGERATED, OTHER',
+  '# Valid washType: STANDARD, HACCP_FOOD_GRADE, INTERIOR, FULL_SERVICE, OTHER',
+  '# Notes are optional. Delete these example rows and add your own.',
+  'AB-123-CD,TRUCK,STANDARD,Example note here',
+  '12-AB-34,TANKER,HACCP_FOOD_GRADE,',
+].join('\n');
+
+function splitCSVLine(line) {
+  const fields = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+    } else if (ch === ',' && !inQuotes) {
+      fields.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  fields.push(current.trim());
+  return fields;
+}
+
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0 && !l.startsWith('#'));
+  if (lines.length === 0) return { rows: [], errors: [{ row: 0, message: 'File is empty or contains only comments.' }] };
+
+  const header = splitCSVLine(lines[0]).map((h) => h.toLowerCase().replace(/[^a-z]/g, ''));
+  const expected = ['licenseplate', 'vehicletype', 'washtype', 'notes'];
+  const colMap = {};
+  for (const exp of expected) {
+    const idx = header.indexOf(exp);
+    if (idx === -1 && exp !== 'notes') {
+      return { rows: [], errors: [{ row: 1, message: `Missing required column: ${exp}` }] };
+    }
+    colMap[exp] = idx;
+  }
+
+  const rows = [];
+  const errors = [];
+
+  for (let i = 1; i < Math.min(lines.length, 101); i++) {
+    const fields = splitCSVLine(lines[i]);
+    const plate = (fields[colMap.licenseplate] || '').toUpperCase();
+    const vType = (fields[colMap.vehicletype] || '').toUpperCase();
+    const wType = (fields[colMap.washtype] || '').toUpperCase();
+    const notes = colMap.notes >= 0 ? (fields[colMap.notes] || '') : '';
+
+    const rowErrors = [];
+    if (!plate) rowErrors.push('License plate is required');
+    if (!VALID_VEHICLE_TYPES.has(vType)) rowErrors.push(`Invalid vehicle type: "${vType || '(empty)'}"`);
+    if (!VALID_WASH_TYPES.has(wType)) rowErrors.push(`Invalid wash type: "${wType || '(empty)'}"`);
+
+    rows.push({ licensePlate: plate, vehicleType: vType, washType: wType, notes, rowNum: i + 1, errors: rowErrors });
+    if (rowErrors.length > 0) {
+      errors.push({ row: i + 1, message: rowErrors.join('; ') });
+    }
+  }
+
+  if (lines.length > 101) {
+    errors.push({ row: 0, message: 'CSV truncated to 100 rows maximum.' });
+  }
+
+  // Duplicate plate detection within CSV
+  const seenPlates = new Set();
+  for (const row of rows) {
+    if (row.licensePlate && row.errors.length === 0) {
+      if (seenPlates.has(row.licensePlate)) {
+        row.errors.push('Duplicate license plate in CSV');
+        errors.push({ row: row.rowNum, message: 'Duplicate license plate in CSV' });
+      }
+      seenPlates.add(row.licensePlate);
+    }
+  }
+
+  return { rows, errors };
+}
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -156,11 +247,11 @@ function VehicleFormFields({ form, onChange }) {
   );
 }
 
-function Modal({ isOpen, onClose, title, children }) {
+function Modal({ isOpen, onClose, title, wide, children }) {
   if (!isOpen) return null;
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
+      <div className={`${styles.modalPanel} ${wide ? styles.modalPanelWide : ''}`} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>{title}</h2>
           <button className={styles.modalClose} onClick={onClose} type="button">
@@ -195,6 +286,14 @@ export default function PortalVehicles() {
   const [addForm,  setAddForm]  = useState(EMPTY_FORM);
   const [swapForm, setSwapForm] = useState({ ...EMPTY_FORM, swapReason: '' });
   const [addSuccess, setAddSuccess] = useState(false);
+
+  // Bulk upload state
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [bulkStep, setBulkStep] = useState(1);
+  const [bulkParsed, setBulkParsed] = useState([]);
+  const [bulkErrors, setBulkErrors] = useState([]);
+  const [bulkSuccess, setBulkSuccess] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Capacity stats
   const activeVehicles = vehicleList.filter((v) => v.status === 'ACTIVE');
@@ -278,6 +377,88 @@ export default function PortalVehicles() {
     );
   }
 
+  // ─── Bulk upload handlers ───────────────────────────────────────────────────
+
+  function handleDownloadTemplate() {
+    const blob = new Blob([CSV_TEMPLATE], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'btc-vehicle-template.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function handleFileSelect(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const text = evt.target.result;
+      const { rows, errors } = parseCSV(text);
+
+      // Check for plates already in the vehicle list
+      const existingPlates = new Set(vehicleList.map((v) => v.licensePlate));
+      for (const row of rows) {
+        if (row.licensePlate && row.errors.length === 0 && existingPlates.has(row.licensePlate)) {
+          row.errors.push('License plate already exists');
+          errors.push({ row: row.rowNum, message: `${row.licensePlate} already exists` });
+        }
+      }
+
+      setBulkParsed(rows);
+      setBulkErrors(errors);
+      setBulkStep(2);
+    };
+    reader.readAsText(file);
+  }
+
+  function handleBulkSubmit() {
+    const remainingSlots = totalSlots - usedSlots;
+    const validRows = bulkParsed.filter((r) => r.errors.length === 0);
+    const toAdd = validRows.slice(0, remainingSlots);
+
+    const newVehicles = toAdd.map((row, i) => ({
+      id: `vehicle-bulk-${Date.now()}-${i}`,
+      portalId: portal.id,
+      licensePlate: row.licensePlate,
+      vehicleType: row.vehicleType,
+      washType: row.washType,
+      notes: row.notes,
+      status: 'ACTIVE',
+      assignedAt: new Date().toISOString(),
+      swappedAt: null,
+      replacedBy: null,
+    }));
+
+    setVehicleList((prev) => [...prev, ...newVehicles]);
+    setBulkSuccess(true);
+    setTimeout(() => {
+      setBulkSuccess(false);
+      setBulkModalOpen(false);
+      setBulkStep(1);
+      setBulkParsed([]);
+      setBulkErrors([]);
+    }, 1400);
+  }
+
+  function handleBulkModalClose() {
+    setBulkModalOpen(false);
+    setBulkStep(1);
+    setBulkParsed([]);
+    setBulkErrors([]);
+    setBulkSuccess(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
+  // Bulk preview computed values
+  const remainingSlots = totalSlots - usedSlots;
+  const bulkValidRows = bulkParsed.filter((r) => r.errors.length === 0);
+  const bulkCanAdd = Math.min(bulkValidRows.length, remainingSlots);
+  const bulkWillTruncate = bulkValidRows.length > remainingSlots;
+
   // ─── Render ──────────────────────────────────────────────────────────────────
 
   return (
@@ -295,14 +476,24 @@ export default function PortalVehicles() {
           </p>
         </div>
         {!atCapacity && (
-          <button
-            className={styles.addVehicleBtn}
-            onClick={() => { setAddForm(EMPTY_FORM); setAddSuccess(false); setAddModalOpen(true); }}
-            type="button"
-          >
-            <PlusCircle size={16} strokeWidth={1.8} />
-            Add Vehicle
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              className={styles.bulkUploadBtn}
+              onClick={() => { setBulkStep(1); setBulkParsed([]); setBulkErrors([]); setBulkSuccess(false); setBulkModalOpen(true); }}
+              type="button"
+            >
+              <Upload size={16} strokeWidth={1.8} />
+              Bulk Upload
+            </button>
+            <button
+              className={styles.addVehicleBtn}
+              onClick={() => { setAddForm(EMPTY_FORM); setAddSuccess(false); setAddModalOpen(true); }}
+              type="button"
+            >
+              <PlusCircle size={16} strokeWidth={1.8} />
+              Add Vehicle
+            </button>
+          </div>
         )}
       </div>
 
@@ -521,6 +712,146 @@ export default function PortalVehicles() {
               >
                 <ArrowLeftRight size={15} strokeWidth={1.8} />
                 Confirm Swap
+              </button>
+            </div>
+          </>
+        )}
+      </Modal>
+
+      {/* ── BULK UPLOAD MODAL ── */}
+      <Modal
+        isOpen={bulkModalOpen}
+        onClose={handleBulkModalClose}
+        title="Bulk Vehicle Upload"
+        wide
+      >
+        {bulkSuccess ? (
+          <div className={styles.successState}>
+            <CheckCircle size={40} strokeWidth={1.5} style={{ color: 'var(--alert-success-primary)' }} />
+            <p>{bulkCanAdd} vehicle{bulkCanAdd !== 1 ? 's' : ''} added successfully!</p>
+          </div>
+        ) : bulkStep === 1 ? (
+          <>
+            <span className={styles.bulkStepLabel}>Step 1 of 2</span>
+
+            <div className={styles.templateSection}>
+              <p>
+                Download the CSV template, fill in your vehicle details, then upload the completed file.
+                Each row represents one vehicle.
+              </p>
+              <button className={styles.downloadBtn} onClick={handleDownloadTemplate} type="button">
+                <Download size={15} strokeWidth={1.8} />
+                Download Template
+              </button>
+            </div>
+
+            <hr className={styles.divider} />
+
+            <div
+              className={styles.uploadZone}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload size={24} strokeWidth={1.5} style={{ color: 'var(--neutral-30)' }} />
+              <span className={styles.uploadZoneLabel}>Click to upload CSV file</span>
+              <span className={styles.uploadZoneHint}>Accepts .csv files up to 100 rows</span>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              style={{ display: 'none' }}
+              onChange={handleFileSelect}
+            />
+          </>
+        ) : (
+          <>
+            <span className={styles.bulkStepLabel}>Step 2 of 2 — Preview</span>
+
+            {bulkErrors.length > 0 && (
+              <div className={styles.errorBanner}>
+                <AlertCircle size={16} strokeWidth={2} style={{ color: 'var(--alert-error-primary)', flexShrink: 0, marginTop: 2 }} />
+                <div>
+                  <strong>{bulkErrors.length} issue{bulkErrors.length !== 1 ? 's' : ''} found.</strong> Rows with errors will be skipped.
+                  <ul>
+                    {bulkErrors.slice(0, 5).map((err, i) => (
+                      <li key={i}>Row {err.row}: {err.message}</li>
+                    ))}
+                    {bulkErrors.length > 5 && <li>...and {bulkErrors.length - 5} more</li>}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {bulkWillTruncate && (
+              <div className={styles.warningBanner}>
+                <AlertTriangle size={16} strokeWidth={2} style={{ color: 'var(--alert-warning-primary)', flexShrink: 0, marginTop: 2 }} />
+                <span>
+                  Only <strong>{remainingSlots}</strong> slot{remainingSlots !== 1 ? 's' : ''} remaining.
+                  The first {remainingSlots} valid vehicle{remainingSlots !== 1 ? 's' : ''} will be added;
+                  {' '}{bulkValidRows.length - remainingSlots} will be skipped.
+                </span>
+              </div>
+            )}
+
+            <div className={styles.previewTable}>
+              <div className={styles.previewHead}>
+                <span>#</span>
+                <span>License Plate</span>
+                <span>Type</span>
+                <span>Wash Type</span>
+                <span>Notes</span>
+                <span>Status</span>
+              </div>
+              {bulkParsed.map((row, idx) => {
+                const hasError = row.errors.length > 0;
+                const validIdx = hasError ? -1 : bulkValidRows.indexOf(row);
+                const isSkipped = !hasError && validIdx >= remainingSlots;
+
+                return (
+                  <div
+                    key={idx}
+                    className={`${styles.previewRow} ${hasError ? styles.previewRowError : ''} ${isSkipped ? styles.previewRowSkipped : ''}`}
+                  >
+                    <span className={styles.previewRowNum}>{row.rowNum}</span>
+                    <span>{row.licensePlate ? <DutchPlate plate={row.licensePlate} size="xs" /> : '—'}</span>
+                    <span>{VALID_VEHICLE_TYPES.has(row.vehicleType) ? <VehicleTypeLabel type={row.vehicleType} /> : (row.vehicleType || '—')}</span>
+                    <span>{VALID_WASH_TYPES.has(row.washType) ? <WashTypeBadge washType={row.washType} /> : (row.washType || '—')}</span>
+                    <span className={styles.previewNotes} title={row.notes}>{row.notes || '—'}</span>
+                    <span className={styles.previewStatus}>
+                      {hasError ? (
+                        <span className={styles.previewStatusError} title={row.errors.join('; ')}>
+                          <X size={13} strokeWidth={2.5} /> Error
+                        </span>
+                      ) : isSkipped ? (
+                        <span className={styles.previewStatusSkipped}>Skipped</span>
+                      ) : (
+                        <span className={styles.previewStatusValid}>
+                          <CheckCircle size={13} strokeWidth={2} /> Valid
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className={styles.modalActions}>
+              <button
+                className={styles.backBtn}
+                onClick={() => { setBulkStep(1); setBulkParsed([]); setBulkErrors([]); if (fileInputRef.current) fileInputRef.current.value = ''; }}
+                type="button"
+              >
+                <ArrowLeft size={14} strokeWidth={1.8} />
+                Back
+              </button>
+              <button
+                className={styles.submitBtn}
+                onClick={handleBulkSubmit}
+                disabled={bulkCanAdd === 0}
+                type="button"
+              >
+                <PlusCircle size={15} strokeWidth={1.8} />
+                Add {bulkCanAdd} Vehicle{bulkCanAdd !== 1 ? 's' : ''}
               </button>
             </div>
           </>

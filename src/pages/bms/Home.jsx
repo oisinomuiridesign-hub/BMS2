@@ -8,6 +8,7 @@ import { activities } from '../../data/bms/activities';
 import { approvalQueue } from '../../data/portal/approvalQueue';
 import { certificates } from '../../data/portal/certificates';
 import { getPendingChangeRequests } from '../../data/bms/changeRequests';
+import { useNotifications } from '../../context/NotificationsContext';
 import styles from './Home.module.css';
 import approvalStyles from './HomeApprovals.module.css';
 
@@ -25,7 +26,8 @@ function generateCertNumber() {
 
 export default function Home() {
   const navigate = useNavigate();
-  const pendingChangeCount = getPendingChangeRequests().length;
+  const { unreadCount } = useNotifications();
+  const pendingChangeCount = unreadCount;
 
   const totalClients     = clients.length;
   const activeClients    = clients.filter((c) => c.status === 'active').length;
@@ -100,7 +102,7 @@ export default function Home() {
         <button
           type="button"
           className={styles.bellBtn}
-          onClick={() => navigate('/change-requests')}
+          onClick={() => navigate('/notifications')}
           title={pendingChangeCount > 0 ? `${pendingChangeCount} pending change request${pendingChangeCount > 1 ? 's' : ''}` : 'No pending change requests'}
         >
           <Bell size={20} strokeWidth={1.8} />

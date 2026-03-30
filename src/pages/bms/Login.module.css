@@ -1,0 +1,298 @@
+/* ── Page Layout ────────────────────────────────────────────────────────────── */
+
+.page {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ── Left Panel — Dark branding ────────────────────────────────────────────── */
+
+.leftPanel {
+  flex: 1;
+  background: var(--neutral-10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.logoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.logoBasiq {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 52px;
+  letter-spacing: 6px;
+  color: var(--neutral-100);
+  line-height: 1;
+}
+
+.logoManagement {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 52px;
+  letter-spacing: 6px;
+  color: var(--primary-20);
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.logoSystemRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.logoSystem {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 52px;
+  letter-spacing: 6px;
+  color: var(--neutral-100);
+  line-height: 1;
+}
+
+.decorBars {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 8px;
+}
+
+.decorBars span {
+  display: block;
+  height: 5px;
+  border-radius: 1px;
+}
+
+.barWhite {
+  width: 120px;
+  background: var(--neutral-100);
+}
+
+.barGray {
+  width: 100px;
+  background: var(--neutral-30);
+}
+
+.barBlue {
+  width: 80px;
+  background: var(--primary-20);
+}
+
+.barGrayLight {
+  width: 60px;
+  background: var(--neutral-40);
+}
+
+.tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-sm);
+  letter-spacing: 4px;
+  color: var(--neutral-30);
+  margin-top: 20px;
+}
+
+/* ── Right Panel — Login form ──────────────────────────────────────────────── */
+
+.rightPanel {
+  flex: 1;
+  background: var(--neutral-70);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.formCard {
+  width: 100%;
+  max-width: 420px;
+}
+
+.formHeader {
+  margin-bottom: 32px;
+}
+
+.headerLabel {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: 3px;
+  color: var(--neutral-20);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  color: var(--neutral-0);
+  margin: 0 0 28px;
+  letter-spacing: 1px;
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────────── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--neutral-40);
+  border-radius: var(--radius-s);
+  background: var(--neutral-100);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-0);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input::placeholder {
+  color: var(--neutral-30);
+}
+
+.input:focus {
+  border-color: var(--primary-10);
+}
+
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordWrapper .input {
+  padding-right: 42px;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--neutral-30);
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.eyeBtn:hover {
+  color: var(--neutral-20);
+}
+
+.submitBtn {
+  height: 44px;
+  border: none;
+  border-radius: var(--radius-100);
+  background: var(--primary-50);
+  color: var(--primary-10);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.forgotLink {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--neutral-20);
+  text-align: center;
+  margin: 4px 0 0;
+  cursor: default;
+}
+
+/* ── Quick Login Section ───────────────────────────────────────────────────── */
+
+.quickLoginSection {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--neutral-50);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quickLoginLabel {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--neutral-30);
+  margin-bottom: 4px;
+}
+
+.quickBtn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  background: var(--neutral-100);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.quickBtn:hover {
+  border-color: var(--primary-20);
+  box-shadow: var(--shadow-card-hover);
+  background: var(--primary-60);
+}
+
+.quickBtn svg {
+  flex-shrink: 0;
+  color: var(--primary-10);
+}
+
+.quickBtnText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quickBtnRole {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--neutral-0);
+}
+
+.quickBtnDesc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--neutral-30);
+  line-height: 1.4;
+}
+
+/* ── Owner accent ── */
+.quickOwner:hover svg {
+  color: var(--primary-0);
+}
+
+/* ── Planner accent ── */
+.quickPlanner:hover svg {
+  color: var(--alert-warning-primary);
+}

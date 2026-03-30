@@ -1,0 +1,290 @@
+/* ── Page ───────────────────────────────────────────────────────────────── */
+.page {
+  padding: 32px 36px;
+}
+
+/* ── Top bar ───────────────────────────────────────────────────────────── */
+.topBar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.topBarLeft {
+  min-width: 0;
+}
+.topBarRight {
+  flex-shrink: 0;
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-xxl);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--neutral-0);
+  margin: 0 0 4px;
+  letter-spacing: 0.5px;
+}
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  color: var(--neutral-30);
+}
+.breadcrumbLink {
+  color: var(--primary-10);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.breadcrumbLink:hover {
+  color: var(--primary-0);
+}
+.breadcrumbSep {
+  color: var(--neutral-30);
+}
+.breadcrumbCurrent {
+  color: var(--neutral-20);
+}
+
+/* ── Category tabs ─────────────────────────────────────────────────────── */
+.categoryBar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--neutral-50);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.categoryTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--neutral-30);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.categoryTab:hover {
+  color: var(--neutral-10);
+}
+.categoryTabActive {
+  color: var(--primary-10);
+  border-bottom-color: var(--primary-10);
+}
+.categoryCount {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  background: var(--neutral-60);
+  color: var(--neutral-20);
+  padding: 1px 7px;
+  border-radius: var(--radius-100);
+}
+.categoryTabActive .categoryCount {
+  background: var(--primary-50);
+  color: var(--primary-0);
+}
+
+/* ── Content area ──────────────────────────────────────────────────────── */
+.content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* ── Filter panel (left) ───────────────────────────────────────────────── */
+.filterPanel {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  position: sticky;
+  top: 24px;
+}
+.filterGroup {
+  margin-bottom: 20px;
+}
+.filterGroup:last-child {
+  margin-bottom: 0;
+}
+.filterTitle {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--neutral-10);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+/* ── Radio buttons ─────────────────────────────────────────────────────── */
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 5px 0;
+}
+.radioInput {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-10);
+  cursor: pointer;
+  margin: 0;
+}
+.radioText {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-10);
+}
+
+/* ── Main list ─────────────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  min-width: 0;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* ── Empty state ───────────────────────────────────────────────────────── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 24px;
+  text-align: center;
+}
+.emptyState p {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-30);
+  margin: 0;
+}
+
+/* ── Modal internals ───────────────────────────────────────────────────── */
+.modalText {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--neutral-20);
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+.modalField {
+  margin-bottom: 20px;
+}
+.modalLabel {
+  display: block;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--neutral-10);
+  margin-bottom: 6px;
+}
+.modalTextarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  padding: 10px 12px;
+  border: 1.5px solid var(--neutral-40);
+  border-radius: var(--radius-s);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.modalTextarea:focus {
+  border-color: var(--primary-10);
+  box-shadow: 0 0 0 3px var(--primary-50);
+}
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.modalCancel {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-s);
+  border: 1.5px solid var(--neutral-40);
+  background: var(--neutral-100);
+  color: var(--neutral-20);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.modalCancel:hover {
+  background: var(--neutral-60);
+}
+.modalReject {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-s);
+  border: 1.5px solid var(--alert-error-primary);
+  background: var(--alert-error-primary);
+  color: var(--neutral-100);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.modalReject:hover {
+  opacity: 0.9;
+}
+
+/* ── Toast stack ───────────────────────────────────────────────────────── */
+.toastStack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--alert-success-secondary);
+  color: var(--alert-success-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--alert-success-primary);
+  box-shadow: var(--shadow-float);
+  animation: slideIn 0.25s ease;
+}
+.toastError {
+  background: var(--alert-error-secondary);
+  color: var(--alert-error-primary);
+  border-color: var(--alert-error-primary);
+}
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}

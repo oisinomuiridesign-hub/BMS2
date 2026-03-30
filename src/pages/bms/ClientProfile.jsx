@@ -129,6 +129,7 @@ function ActivityCard({ activity }) {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const badge = formatDateBadge(activity.createdAt);
   const isNote = activity.type === 'note';
+  const isAlert = activity.type === 'alert';
   const TRUNCATE_AT = 200;
   const longContent = activity.content.length > TRUNCATE_AT;
   const displayContent = expanded || !longContent
@@ -145,27 +146,29 @@ function ActivityCard({ activity }) {
       </div>
 
       {/* Card */}
-      <div className={`${styles.activityCard} ${isNote ? styles.activityNote : styles.activityComplaint}`}>
+      <div className={`${styles.activityCard} ${isAlert ? styles.activityAlert : isNote ? styles.activityNote : styles.activityComplaint}`}>
         <div className={styles.activityHeader}>
           <div className={styles.activityMeta}>
-            <span className={`${styles.typeBadge} ${isNote ? styles.typeBadgeNote : styles.typeBadgeComplaint}`}>
-              {isNote ? 'Note' : 'Complaint'}
+            <span className={`${styles.typeBadge} ${isAlert ? styles.typeBadgeAlert : isNote ? styles.typeBadgeNote : styles.typeBadgeComplaint}`}>
+              {isAlert ? 'Alert' : isNote ? 'Note' : 'Complaint'}
             </span>
-            <span className={styles.activityAuthor}>
-              Note by {activity.authorName}
+            <span className={isAlert ? styles.activityAuthorAlert : styles.activityAuthor}>
+              {isAlert ? 'System alert' : `Note by ${activity.authorName}`}
             </span>
-            <span className={styles.activityTimestamp}>
+            <span className={isAlert ? styles.alertTimestamp : styles.activityTimestamp}>
               {formatTimestamp(activity.createdAt)}
             </span>
           </div>
-          <button className={styles.cardMenuBtn} type="button" aria-label="Options">
-            <MoreVertical size={15} />
-          </button>
+          {!isAlert && (
+            <button className={styles.cardMenuBtn} type="button" aria-label="Options">
+              <MoreVertical size={15} />
+            </button>
+          )}
         </div>
 
-        <h3 className={styles.activityTitle}>{activity.title}</h3>
+        <h3 className={isAlert ? styles.alertTitle : styles.activityTitle}>{activity.title}</h3>
 
-        <p className={styles.activityContent}>
+        <p className={isAlert ? styles.alertContent : styles.activityContent}>
           {displayContent}
           {longContent && (
             <button
@@ -193,29 +196,33 @@ function ActivityCard({ activity }) {
           </div>
         )}
 
-        {/* Reply button */}
-        <div className={styles.activityFooter}>
-          <button
-            className={styles.replyBtn}
-            onClick={() => setShowReplyBox((s) => !s)}
-            type="button"
-          >
-            <MessageSquare size={14} />
-            Reply
-          </button>
-        </div>
+        {/* Reply button — not shown for system alerts */}
+        {!isAlert && (
+          <>
+            <div className={styles.activityFooter}>
+              <button
+                className={styles.replyBtn}
+                onClick={() => setShowReplyBox((s) => !s)}
+                type="button"
+              >
+                <MessageSquare size={14} />
+                Reply
+              </button>
+            </div>
 
-        {showReplyBox && (
-          <div className={styles.replyBox}>
-            <textarea
-              className={styles.replyTextarea}
-              placeholder="Write a reply…"
-              rows={3}
-            />
-            <button className={styles.replySubmitBtn} type="button">
-              Submit
-            </button>
-          </div>
+            {showReplyBox && (
+              <div className={styles.replyBox}>
+                <textarea
+                  className={styles.replyTextarea}
+                  placeholder="Write a reply…"
+                  rows={3}
+                />
+                <button className={styles.replySubmitBtn} type="button">
+                  Submit
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -689,6 +689,35 @@
   border-left-color: var(--alert-error-primary);
 }
 
+.activityAlert {
+  background: var(--primary-10);
+  border-color: var(--primary-0);
+  border-left-color: var(--primary-20);
+}
+
+.alertTitle {
+  color: var(--neutral-100);
+}
+
+.alertContent {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.activityAuthorAlert {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.typeBadgeAlert {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--neutral-100);
+}
+
+.alertTimestamp {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .activityHeader {
   display: flex;
   align-items: flex-start;

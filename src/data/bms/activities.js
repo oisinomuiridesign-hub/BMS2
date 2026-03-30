@@ -305,4 +305,32 @@ export const activities = [
       },
     ],
   },
+
+  // ── Agreement expiry alerts (system-generated) ───────────────────────────
+
+  {
+    id: 21,
+    clientId: 1,
+    type: 'alert',
+    title: 'Agreement expiring — 31 Mar 2026',
+    content:
+      'The current service agreement with Van den Berg Transport B.V. expires on 31 March 2026. This is a 24-month contract covering 22 vehicles at €285 per wash (weekly frequency). Please contact the client to discuss renewal terms before the expiry date.',
+    authorName: 'System',
+    authorAvatar: 'SY',
+    createdAt: '2026-03-16T00:00:00Z',
+    replies: [],
+  },
+
+  {
+    id: 22,
+    clientId: 3,
+    type: 'alert',
+    title: 'Agreement expiring — 31 Jan 2028',
+    content:
+      'The current service agreement with Koelman Trucking B.V. expires on 31 January 2028. This is a 24-month contract covering 14 vehicles at €410 per wash (weekly frequency). Early renewal discussions are recommended to secure continued service.',
+    authorName: 'System',
+    authorAvatar: 'SY',
+    createdAt: '2026-03-14T00:00:00Z',
+    replies: [],
+  },
 ];
