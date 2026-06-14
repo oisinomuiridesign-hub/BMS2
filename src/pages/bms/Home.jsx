@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, Building2, Briefcase, UserCheck, FileText, AlertCircle, CheckCircle, Clock, XCircle, MapPin, Truck, User, X, Bell } from 'lucide-react';
+import { Users, Building2, Briefcase, UserCheck, FileText, AlertCircle, CheckCircle, Clock, XCircle, MapPin, Truck, User, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { clients } from '../../data/bms/clients';
 import { employees } from '../../data/bms/employees';
@@ -7,8 +7,6 @@ import { departments } from '../../data/bms/departments';
 import { activities } from '../../data/bms/activities';
 import { approvalQueue } from '../../data/portal/approvalQueue';
 import { certificates } from '../../data/portal/certificates';
-import { getPendingChangeRequests } from '../../data/bms/changeRequests';
-import { useNotifications } from '../../context/NotificationsContext';
 import styles from './Home.module.css';
 import approvalStyles from './HomeApprovals.module.css';
 
@@ -26,8 +24,6 @@ function generateCertNumber() {
 
 export default function Home() {
   const navigate = useNavigate();
-  const { unreadCount } = useNotifications();
-  const pendingChangeCount = unreadCount;
 
   const totalClients     = clients.length;
   const activeClients    = clients.filter((c) => c.status === 'active').length;
@@ -99,17 +95,6 @@ export default function Home() {
           <h1 className={styles.heading}>HOME</h1>
           <p className={styles.breadcrumbs}>Dashboard</p>
         </div>
-        <button
-          type="button"
-          className={styles.bellBtn}
-          onClick={() => navigate('/notifications')}
-          title={pendingChangeCount > 0 ? `${pendingChangeCount} pending change request${pendingChangeCount > 1 ? 's' : ''}` : 'No pending change requests'}
-        >
-          <Bell size={20} strokeWidth={1.8} />
-          {pendingChangeCount > 0 && (
-            <span className={styles.bellBadge}>{pendingChangeCount}</span>
-          )}
-        </button>
       </div>
 
       {/* ── Stat cards ── */}

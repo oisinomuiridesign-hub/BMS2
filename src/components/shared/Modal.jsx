@@ -2,7 +2,7 @@ import { X } from 'lucide-react';
 import { useEffect } from 'react';
 import styles from './Modal.module.css';
 
-export default function Modal({ isOpen, onClose, title, children }) {
+export default function Modal({ isOpen, onClose, title, children, size }) {
   // Close on Escape key
   useEffect(() => {
     if (!isOpen) return;
@@ -21,7 +21,7 @@ export default function Modal({ isOpen, onClose, title, children }) {
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className={styles.card}>
+      <div className={`${styles.card} ${size === 'lg' ? styles.cardLg : ''}`}>
         <div className={styles.header}>
           <h2 id="modal-title" className={styles.title}>{title}</h2>
           <button

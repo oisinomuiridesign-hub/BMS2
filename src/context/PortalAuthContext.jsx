@@ -45,9 +45,12 @@ export function PortalAuthProvider({ children }) {
   /**
    * Enter management view for a specific portal without login.
    * Called when a BMS user hits "Open Portal" with ?mgmt=true.
+   * Accepts a portal object (preferred — works for runtime-created portals such
+   * as a just-converted client) or a portal ID (falls back to the static lookup).
    */
-  function enterManagementView(portalId) {
-    const portal = findPortalById(portalId);
+  function enterManagementView(portalOrId) {
+    const portal =
+      portalOrId && typeof portalOrId === 'object' ? portalOrId : findPortalById(portalOrId);
     if (!portal) return false;
 
     setPortalUser({

@@ -238,7 +238,10 @@ export default function PortalShell({ portal }) {
             </button>
           )}
           {isManagementView && (
-            <a href={`/leads/${portal.entityId}`} className={styles.backToBmsBtn}>
+            <a
+              href={portal.entityType === 'CLIENT' ? `/clients/${portal.entityId}` : `/leads/${portal.entityId}`}
+              className={styles.backToBmsBtn}
+            >
               ← Back to BMS
             </a>
           )}

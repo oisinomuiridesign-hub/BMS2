@@ -21,6 +21,10 @@
   overflow: hidden;
 }
 
+.cardLg {
+  max-width: 780px;
+}
+
 .header {
   display: flex;
   align-items: center;

@@ -2010,3 +2010,156 @@
   padding: 16px;
   margin: 0;
 }
+
+/* ─── Lead Journey timeline (converted clients) ─────────────────────────────── */
+.journeySection {
+  background: var(--neutral-80);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-l);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.journeyHeader {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--neutral-30);
+  margin-bottom: var(--space-md);
+}
+
+.journeyList {
+  display: flex;
+  flex-direction: column;
+}
+
+.journeyItem {
+  display: flex;
+  gap: var(--space-md);
+  position: relative;
+  padding-bottom: var(--space-md);
+}
+
+/* connector line down the dots */
+.journeyItem::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 28px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--neutral-50);
+}
+.journeyItem:last-child { padding-bottom: 0; }
+.journeyItem:last-child::before { display: none; }
+
+.journeyDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-50);
+  color: var(--primary-0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.journeyBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 3px;
+}
+
+.journeyRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.journeyTitle {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neutral-10);
+}
+
+.journeyDate {
+  font-size: var(--text-xs);
+  color: var(--neutral-30);
+}
+
+.journeyDesc {
+  font-size: var(--text-sm);
+  color: var(--text-dark-secondary);
+  line-height: 1.4;
+}
+
+.journeyPreviewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  align-self: flex-start;
+  background: var(--neutral-100);
+  border: 1.5px solid var(--neutral-50);
+  border-radius: var(--radius-s);
+  padding: 5px 12px;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--primary-0);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.journeyPreviewBtn:hover { background: var(--primary-60); border-color: var(--primary-20); }
+
+/* ─── Agreements: document preview bar ──────────────────────────────────────── */
+.docPreviewBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  background: var(--neutral-80);
+  border: 1px solid var(--neutral-50);
+  border-radius: var(--radius-l);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.docPreviewLabel {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--neutral-30);
+}
+
+.docPreviewBtns {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.docPreviewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--neutral-100);
+  border: 1.5px solid var(--neutral-50);
+  border-radius: var(--radius-m);
+  padding: 8px 16px;
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--neutral-10);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.docPreviewBtn:hover:not(:disabled) { background: var(--primary-60); border-color: var(--primary-20); color: var(--primary-0); }
+.docPreviewBtn:disabled { opacity: 0.5; cursor: not-allowed; }

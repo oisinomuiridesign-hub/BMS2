@@ -23,6 +23,8 @@ import {
   ChevronUp,
   ExternalLink,
   FileText,
+  Send,
+  ThumbsDown,
 } from 'lucide-react';
 import { leadActivities } from '../../data/leads/leadActivities';
 import { employees } from '../../data/bms/employees';
@@ -31,17 +33,23 @@ import LeadStatusBadge from '../../components/shared/LeadStatusBadge';
 import AvatarInitials from '../../components/shared/AvatarInitials';
 import Modal from '../../components/shared/Modal';
 import CustomButton from '../../components/shared/CustomButton';
+import ProposalPreview from './ProposalPreview';
 import styles from './LeadProfile.module.css';
 
 // ── Pipeline stages in order ───────────────────────────────────────────────
+// Stages are named for the *state we're now in* (what we're waiting on), not the
+// event that just happened. The Approve / Disapprove decision is made AT the
+// "New Lead" stage; the resulting stage is "Awaiting Details". Submitting the
+// service form auto-drafts the proposal and lands straight at "Under Review", so
+// there is no separate "Details Submitted" resting stage. CONVERTED / LOST are
+// terminal states off the visible pipeline.
 const PIPELINE_STAGES = [
-  { key: 'CAPTURED', label: 'Captured', description: 'Enquiry form submitted — awaiting planner approval' },
-  { key: 'APPROVED', label: 'Approved', description: 'Planner approved — service details form emailed to lead' },
-  { key: 'DETAILS_SUBMITTED', label: 'Details Submitted', description: 'Lead submitted service details — awaiting BTC review' },
-  { key: 'UNDER_REVIEW', label: 'Under Review', description: 'BTC team reviewing submitted service details' },
-  { key: 'PROPOSAL_SENT', label: 'Proposal Sent', description: 'Draft agreement and Moneybird quote sent to lead' },
-  { key: 'AWAITING_ACCEPTANCE', label: 'Awaiting Acceptance', description: 'Awaiting lead signature on service agreement' },
-  { key: 'CONVERTED', label: 'Converted', description: 'Lead converted to full client' },
+  { key: 'CAPTURED', label: 'New Lead', description: 'New enquiry — review and approve, or disapprove to close.' },
+  { key: 'APPROVED', label: 'Awaiting Details', description: 'Approved — collecting service details from the lead.' },
+  { key: 'UNDER_REVIEW', label: 'Under Review', description: 'Details in — draft proposal generated. Review before sending.' },
+  { key: 'PROPOSAL_SENT', label: 'Proposal Sent', description: 'Proposal sent to the lead — awaiting their response.' },
+  { key: 'AWAITING_ACCEPTANCE', label: 'Awaiting Acceptance', description: 'Awaiting signature — revise and resend if needed.' },
+  { key: 'READY_TO_CONVERT', label: 'Ready to Convert', description: 'Proposal signed & accepted — ready to convert to a client.' },
 ];
 
 const STAGE_INDEX = Object.fromEntries(PIPELINE_STAGES.map((s, i) => [s.key, i]));
@@ -174,7 +182,7 @@ function ActivityCard({ activity }) {
 }
 
 // ── Approve Lead Modal ───────────────────────────────────────────────────────
-function ApproveModal({ isOpen, onClose, contactPerson, contactEmail, onConfirm }) {
+function ApproveModal({ isOpen, onClose, companyName, onConfirm }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Approve Lead">
       <div className={styles.convertModal}>
@@ -182,16 +190,48 @@ function ApproveModal({ isOpen, onClose, contactPerson, contactEmail, onConfirm 
           <CheckCircle size={32} strokeWidth={1.5} />
         </div>
         <p className={styles.convertText}>
-          Approving this lead will send the <strong>Service Detail Form (Form 2)</strong> to{' '}
-          <strong>{contactPerson}</strong> at {contactEmail}. They will complete and return it
-          before a quote can be drafted.
+          Approve <strong>{companyName}</strong> as a lead worth pursuing? The lead moves to{' '}
+          <strong>Awaiting Details</strong>, where you can collect the service details — fill the
+          form together on a call, or email it to the lead.
         </p>
         <div className={styles.convertActions}>
           <button className={styles.convertCancelBtn} type="button" onClick={onClose}>
             Cancel
           </button>
           <button className={styles.approveConfirmBtn} type="button" onClick={onConfirm}>
-            Confirm Approval
+            Approve Lead
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+// ── Disapprove Lead Modal ────────────────────────────────────────────────────
+function DisapproveModal({ isOpen, onClose, companyName, reason, setReason, onConfirm }) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Disapprove Lead">
+      <div className={styles.convertModal}>
+        <div className={`${styles.convertIcon} ${styles.disapproveIcon}`}>
+          <ThumbsDown size={30} strokeWidth={1.5} />
+        </div>
+        <p className={styles.convertText}>
+          Close <strong>{companyName}</strong> as a lost lead? It will be removed from the active
+          pipeline. Add a short reason for the record.
+        </p>
+        <textarea
+          className={styles.disapproveTextarea}
+          rows={3}
+          placeholder="e.g. Out of service area, fleet too small, went with a competitor…"
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+        />
+        <div className={styles.convertActions}>
+          <button className={styles.convertCancelBtn} type="button" onClick={onClose}>
+            Cancel
+          </button>
+          <button className={styles.disapproveConfirmBtn} type="button" onClick={onConfirm}>
+            Mark as Lost
           </button>
         </div>
       </div>
@@ -367,14 +407,27 @@ function AgreementCardList({ leadAgreements, formatPrice, statusBadgeStyle, stat
 export default function LeadProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { leads, agreements, convertLeadToClient } = useData();
+  const {
+    leads,
+    agreements,
+    convertLeadToClient,
+    approveLead,
+    disapproveLead,
+    generateServiceForm,
+    sendProposal,
+    markAwaitingAcceptance,
+    acceptProposal,
+    updateProposal,
+  } = useData();
 
   const lead = leads.find((l) => l.id === id);
   const [activeTab, setActiveTab] = useState('overview');
-  const [leadStatus, setLeadStatus] = useState(lead?.status ?? 'CAPTURED');
   const [showConvertModal, setShowConvertModal] = useState(false);
   const [showApproveModal, setShowApproveModal] = useState(false);
-  const [approveSuccess, setApproveSuccess] = useState(false);
+  const [showDisapproveModal, setShowDisapproveModal] = useState(false);
+  const [disapproveReason, setDisapproveReason] = useState('');
+  const [showProposal, setShowProposal] = useState(false);
+  const [formEmailed, setFormEmailed] = useState(false);
 
   // Activity tab state
   const [filterSearch, setFilterSearch] = useState('');
@@ -410,9 +463,11 @@ export default function LeadProfile() {
     );
   }
 
+  // Stage is driven directly by the context lead so every action reflects live.
+  const leadStatus = lead.status;
   const currentStageIndex = STAGE_INDEX[leadStatus] ?? -1;
   const isLost = leadStatus === 'LOST';
-  const canConvert = currentStageIndex >= 2 && leadStatus !== 'CONVERTED' && leadStatus !== 'LOST';
+  const proposal = agreements.find((a) => a.leadId === lead.id);
 
   const TABS = [
     { key: 'overview', label: 'Overview' },
@@ -420,19 +475,52 @@ export default function LeadProfile() {
     { key: 'activity', label: 'Activity' },
   ];
 
+  const plannerName = assignedEmployee
+    ? `${assignedEmployee.firstName} ${assignedEmployee.lastName}`
+    : 'BMS Planner';
+
+  // Build the public form URL for this lead. `mgmt=1` flags the planner-fill
+  // experience; the `lead` param lets the form resolve even from a fresh tab.
+  function formUrl(formId, { mgmt } = {}) {
+    const params = new URLSearchParams();
+    if (mgmt) params.set('mgmt', '1');
+    params.set('lead', lead.id);
+    return `/form/service-details/${formId}?${params.toString()}`;
+  }
+
+  // Stage 1 — approve / disapprove the new lead.
   function handleApproveConfirm() {
+    approveLead(lead.id, plannerName);
     setShowApproveModal(false);
-    setLeadStatus('APPROVED');
-    setApproveSuccess(true);
+  }
+
+  function handleDisapproveConfirm() {
+    disapproveLead(lead.id, disapproveReason.trim() || 'Disapproved by planner.');
+    setShowDisapproveModal(false);
+  }
+
+  // Stage 2 — collect service details. Planner-fill navigates in-tab so BMS auth
+  // + data are shared; the form's "Return to lead" lands back here, now advanced.
+  function handleFillForm() {
+    const formId = generateServiceForm(lead.id, 'planner');
+    if (formId) navigate(formUrl(formId, { mgmt: true }));
+  }
+
+  function handleEmailForm() {
+    generateServiceForm(lead.id, 'email');
+    setFormEmailed(true);
+  }
+
+  // Stage 3+ — proposal lifecycle.
+  function handleSendProposal() {
+    sendProposal(lead.id);
+    setShowProposal(false);
   }
 
   function handleConvertConfirm() {
     const newClientId = convertLeadToClient(lead.id);
     setShowConvertModal(false);
-    if (newClientId) {
-      setLeadStatus('CONVERTED');
-      navigate(`/clients/${newClientId}`);
-    }
+    if (newClientId) navigate(`/clients/${newClientId}`);
   }
 
   return (
@@ -470,12 +558,13 @@ export default function LeadProfile() {
         </nav>
       </div>
 
-      {/* Approve success banner */}
-      {approveSuccess && leadStatus === 'APPROVED' && (
+      {/* Form-emailed banner */}
+      {formEmailed && leadStatus === 'APPROVED' && (
         <div className={styles.successBanner}>
           <CheckCircle size={16} />
           <span>
-            Lead approved. Form 2 has been sent to <strong>{lead.contactEmail}</strong>.
+            Service detail form emailed to <strong>{lead.contactEmail}</strong>. The lead can
+            complete it themselves, or you can still fill it in with them.
           </span>
         </div>
       )}
@@ -567,6 +656,47 @@ export default function LeadProfile() {
                     </div>
                   )}
                 </div>
+
+                {/* ── Service Form (Form 2) — ID + status, once generated ── */}
+                {lead.serviceFormId && (
+                  <div className={styles.infoSection}>
+                    <span className={styles.infoSectionLabel}>Service Form</span>
+                    <div className={styles.detailRow}>
+                      <span className={styles.detailLabel}>Form ID</span>
+                      <span className={styles.formIdValue}>{lead.serviceFormId}</span>
+                    </div>
+                    <div className={styles.detailRow}>
+                      <span className={styles.detailLabel}>Status</span>
+                      <span className={styles.detailValue}>
+                        {lead.serviceDetailsForm
+                          ? `Submitted ${formatDate(lead.serviceDetailsForm.form2SubmittedAt)}`
+                          : lead.form2SentAt
+                          ? `Emailed to lead ${formatDate(lead.form2SentAt)} — awaiting completion`
+                          : 'Generated — awaiting completion'}
+                      </span>
+                    </div>
+                    {!lead.serviceDetailsForm && (
+                      <div className={styles.formLinkRow}>
+                        <Link
+                          to={formUrl(lead.serviceFormId, { mgmt: true })}
+                          className={styles.openFormLink}
+                        >
+                          <FileText size={14} />
+                          Open form
+                        </Link>
+                        <a
+                          href={formUrl(lead.serviceFormId)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.leadLink}
+                        >
+                          <ExternalLink size={13} />
+                          View as lead
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* ── Enquiry Form (Form 1) ── */}
                 {lead.enquiryForm && (
@@ -757,33 +887,109 @@ export default function LeadProfile() {
                   </span>
                 </div>
 
-                {/* Approve Lead action — only for CAPTURED leads */}
+                {/* ── Stage 1: New Lead — approve / disapprove fork ── */}
                 {leadStatus === 'CAPTURED' && (
                   <div className={styles.convertAction}>
-                    <button
-                      className={styles.approveBtn}
-                      type="button"
-                      onClick={() => setShowApproveModal(true)}
-                    >
+                    <button className={styles.approveBtn} type="button" onClick={() => setShowApproveModal(true)}>
                       <CheckCircle size={15} />
                       Approve Lead
                     </button>
+                    <button className={styles.disapproveBtn} type="button" onClick={() => setShowDisapproveModal(true)}>
+                      <ThumbsDown size={15} />
+                      Disapprove
+                    </button>
+                    <span className={styles.actionHint}>
+                      Approve to begin collecting service details, or disapprove to close the lead as
+                      lost.
+                    </span>
                   </div>
                 )}
 
-                {/* Convert to Client action — only available from DETAILS_SUBMITTED onwards */}
-                {canConvert && (
+                {/* ── Stage 2: Awaiting Details — collect the service form ── */}
+                {leadStatus === 'APPROVED' && (
                   <div className={styles.convertAction}>
-                    <button
-                      className={styles.convertBtn}
-                      type="button"
-                      onClick={() => setShowConvertModal(true)}
-                    >
+                    <button className={styles.fillFormBtn} type="button" onClick={handleFillForm}>
+                      <FileText size={15} />
+                      Fill Form with Lead
+                    </button>
+                    <button className={styles.secondaryBtn} type="button" onClick={handleEmailForm}>
+                      <Mail size={15} />
+                      Email Form to Lead
+                    </button>
+                    <span className={styles.actionHint}>
+                      Collect service details — fill the form on a call, or email it to the lead.
+                      Submitting it drafts the proposal automatically.
+                    </span>
+                  </div>
+                )}
+
+                {/* ── Stage 3: Under Review — preview the draft proposal, then send ── */}
+                {leadStatus === 'UNDER_REVIEW' && (
+                  <div className={styles.convertAction}>
+                    <button className={styles.fillFormBtn} type="button" onClick={() => setShowProposal(true)}>
+                      <FileText size={15} />
+                      Preview Proposal
+                    </button>
+                    <button className={styles.approveBtn} type="button" onClick={handleSendProposal}>
+                      <Send size={15} />
+                      Send Proposal
+                    </button>
+                    <span className={styles.actionHint}>
+                      The agent has drafted a proposal from the submitted details. Review it, then
+                      send it to the lead.
+                    </span>
+                  </div>
+                )}
+
+                {/* ── Stage 4: Proposal Sent — follow up, then await acceptance ── */}
+                {leadStatus === 'PROPOSAL_SENT' && (
+                  <div className={styles.convertAction}>
+                    <button className={styles.fillFormBtn} type="button" onClick={() => setShowProposal(true)}>
+                      <FileText size={15} />
+                      Preview / Edit Proposal
+                    </button>
+                    <button className={styles.secondaryBtn} type="button" onClick={() => markAwaitingAcceptance(lead.id)}>
+                      <Clock size={15} />
+                      Mark Awaiting Acceptance
+                    </button>
+                    <span className={styles.actionHint}>
+                      Proposal sent — follow up with the lead, then mark it as awaiting their
+                      signature.
+                    </span>
+                  </div>
+                )}
+
+                {/* ── Stage 5: Awaiting Acceptance — resend on pushback, or accept ── */}
+                {leadStatus === 'AWAITING_ACCEPTANCE' && (
+                  <div className={styles.convertAction}>
+                    <button className={styles.fillFormBtn} type="button" onClick={() => setShowProposal(true)}>
+                      <FileText size={15} />
+                      Edit &amp; Resend Proposal
+                    </button>
+                    <button className={styles.approveBtn} type="button" onClick={() => acceptProposal(lead.id)}>
+                      <CheckCircle size={15} />
+                      Mark Accepted
+                    </button>
+                    <span className={styles.actionHint}>
+                      Awaiting signature. Edit and resend on pushback, or mark accepted once signed.
+                    </span>
+                  </div>
+                )}
+
+                {/* ── Stage 6: Ready to Convert — sign-off into a client ── */}
+                {leadStatus === 'READY_TO_CONVERT' && (
+                  <div className={styles.convertAction}>
+                    <button className={styles.convertBtn} type="button" onClick={() => setShowConvertModal(true)}>
                       <RefreshCw size={15} />
                       Convert to Client
                     </button>
+                    <span className={styles.actionHint}>
+                      Proposal signed and accepted. Convert to move them out of Leads and into
+                      Clients.
+                    </span>
                   </div>
                 )}
+
                 {leadStatus === 'CONVERTED' && lead.convertedTo && (
                   <div className={styles.convertAction}>
                     <Link to={`/clients/${lead.convertedTo}`} className={styles.viewClientBtn}>
@@ -1176,9 +1382,29 @@ export default function LeadProfile() {
       <ApproveModal
         isOpen={showApproveModal}
         onClose={() => setShowApproveModal(false)}
-        contactPerson={lead.contactPerson}
-        contactEmail={lead.contactEmail}
+        companyName={lead.companyName}
         onConfirm={handleApproveConfirm}
+      />
+
+      {/* Disapprove Modal */}
+      <DisapproveModal
+        isOpen={showDisapproveModal}
+        onClose={() => setShowDisapproveModal(false)}
+        companyName={lead.companyName}
+        reason={disapproveReason}
+        setReason={setDisapproveReason}
+        onConfirm={handleDisapproveConfirm}
+      />
+
+      {/* Proposal Preview / Edit Modal */}
+      <ProposalPreview
+        isOpen={showProposal}
+        onClose={() => setShowProposal(false)}
+        lead={lead}
+        proposal={proposal}
+        onSave={(patch) => updateProposal(lead.id, patch)}
+        onSend={handleSendProposal}
+        sendLabel={proposal?.status === 'DRAFT' ? 'Send Proposal' : 'Save & Resend'}
       />
 
       {/* Convert Modal */}

@@ -1,12 +1,14 @@
 import styles from './LeadStatusBadge.module.css';
 
 const STATUS_CONFIG = {
-  CAPTURED: { label: 'Captured', className: 'captured' },
-  APPROVED: { label: 'Approved', className: 'approved' },
-  DETAILS_SUBMITTED: { label: 'Details Submitted', className: 'detailsSubmitted' },
+  CAPTURED: { label: 'New Lead', className: 'captured' },
+  APPROVED: { label: 'Awaiting Details', className: 'approved' },
+  // DETAILS_SUBMITTED is folded into UNDER_REVIEW; kept as a safe alias.
+  DETAILS_SUBMITTED: { label: 'Under Review', className: 'underReview' },
   UNDER_REVIEW: { label: 'Under Review', className: 'underReview' },
   PROPOSAL_SENT: { label: 'Proposal Sent', className: 'proposalSent' },
   AWAITING_ACCEPTANCE: { label: 'Awaiting Acceptance', className: 'awaitingAcceptance' },
+  READY_TO_CONVERT: { label: 'Ready to Convert', className: 'awaitingAcceptance' },
   CONVERTED: { label: 'Converted', className: 'converted' },
   LOST: { label: 'Lost', className: 'lost' },
 };

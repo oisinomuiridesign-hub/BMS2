@@ -24,6 +24,9 @@ import Notifications from './pages/bms/Notifications'
 import LeadsOverview from './pages/leads/LeadsOverview'
 import LeadProfile from './pages/leads/LeadProfile'
 
+// ── Standalone forms (client-facing, no shell) ───────────────────────────────
+import ServiceDetailsForm from './pages/forms/ServiceDetailsForm'
+
 // ── Portal pages ─────────────────────────────────────────────────────────────
 import PortalLogin from './pages/portal/PortalLogin'
 import PortalRoute from './pages/portal/PortalRoute'
@@ -52,6 +55,9 @@ export default function App() {
       <Routes>
         {/* ── BMS login — no shell ───────────────────────────────────────── */}
         <Route path="/login" element={<Login />} />
+
+        {/* ── Standalone service detail form — public, no shell ───────────── */}
+        <Route path="/form/service-details/:formId" element={<ServiceDetailsForm />} />
 
         {/* ── Portal routes — own layout, NO BMS sidebar ─────────────────── */}
         <Route path="/portal/login" element={<PortalLogin />} />

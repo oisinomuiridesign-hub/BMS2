@@ -25,13 +25,12 @@ import styles from './LeadsOverview.module.css';
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All Statuses' },
-  { value: 'CAPTURED', label: 'Captured' },
-  { value: 'APPROVED', label: 'Approved' },
-  { value: 'DETAILS_SUBMITTED', label: 'Details Submitted' },
+  { value: 'CAPTURED', label: 'New Lead' },
+  { value: 'APPROVED', label: 'Awaiting Details' },
   { value: 'UNDER_REVIEW', label: 'Under Review' },
   { value: 'PROPOSAL_SENT', label: 'Proposal Sent' },
   { value: 'AWAITING_ACCEPTANCE', label: 'Awaiting Acceptance' },
-  { value: 'CONVERTED', label: 'Converted' },
+  { value: 'READY_TO_CONVERT', label: 'Ready to Convert' },
   { value: 'LOST', label: 'Lost' },
 ];
 
@@ -204,13 +203,15 @@ export default function LeadsOverview() {
 
   const filtered = useMemo(() => {
     return leads.filter((lead) => {
+      // Converted leads leave the pipeline — they live in Clients now.
+      if (lead.status === 'CONVERTED') return false;
       const nameMatch = lead.companyName.toLowerCase().includes(search.toLowerCase()) ||
         lead.contactPerson.toLowerCase().includes(search.toLowerCase());
       const statusMatch = statusFilter === '' || lead.status === statusFilter;
       const sourceMatch = sourceFilter === '' || lead.leadSource === sourceFilter;
       return nameMatch && statusMatch && sourceMatch;
     });
-  }, [search, statusFilter, sourceFilter]);
+  }, [leads, search, statusFilter, sourceFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const paginated = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);

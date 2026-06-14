@@ -25,15 +25,18 @@ import {
   Pencil,
   X,
   Clock,
+  FilePen,
+  Send,
 } from 'lucide-react';
 import { employees } from '../../data/bms/employees';
 import { departments } from '../../data/bms/departments';
 import { activities } from '../../data/bms/activities';
-import { findPortalById } from '../../data/portal/portals';
 import { getShiftsForClient } from '../../data/bms/shifts';
 import { useChangeRequests } from '../../context/ChangeRequestsContext';
 import { useData } from '../../context/DataContext';
 import ShiftCard from '../../components/shared/ShiftCard';
+import ProposalPreview from '../leads/ProposalPreview';
+import ServiceFormView from './ServiceFormView';
 import styles from './ClientProfile.module.css';
 
 // ─── Role order for the contact list ───────────────────────────────────────
@@ -240,16 +243,103 @@ function EmptyTab({ icon: Icon, label }) {
   );
 }
 
+// ─── Lead Journey ──────────────────────────────────────────────────────────
+// Reconstructs the full lead→client paper trail for transparency on the
+// client's timeline. Built from the originating lead and its proposal.
+const JOURNEY_ICONS = {
+  enquiry: Mail,
+  approve: CheckCircle,
+  form: FileText,
+  proposal: FilePen,
+  send: Send,
+  signed: CheckCircle,
+  client: Globe,
+};
+
+function buildJourney(lead, agreement) {
+  if (!lead) return [];
+  const ev = [];
+  ev.push({
+    key: 'enquiry', date: lead.createdAt, icon: 'enquiry', title: 'Enquiry received',
+    desc: lead.enquiryForm ? `Initial enquiry — ~${lead.enquiryForm.fleetSize} vehicles` : 'Initial enquiry submitted',
+  });
+  if (lead.plannerApprovedAt) ev.push({
+    key: 'approve', date: lead.plannerApprovedAt, icon: 'approve', title: 'Lead approved',
+    desc: lead.plannerApprovedBy ? `Approved by ${lead.plannerApprovedBy}` : 'Approved by planner',
+  });
+  if (lead.serviceDetailsForm?.form2SubmittedAt) ev.push({
+    key: 'form', date: lead.serviceDetailsForm.form2SubmittedAt, icon: 'form',
+    title: 'Service detail form submitted',
+    desc: lead.serviceFormId ? `Form ${lead.serviceFormId} completed` : 'Service details submitted',
+    preview: 'form',
+  });
+  if (agreement) {
+    ev.push({
+      key: 'drafted', date: agreement.sentAt || lead.serviceDetailsForm?.form2SubmittedAt, icon: 'proposal',
+      title: 'Proposal drafted', desc: 'Draft proposal generated from the submitted details', preview: 'proposal',
+    });
+    if (agreement.sentAt) ev.push({
+      key: 'sent', date: agreement.sentAt, icon: 'send', title: 'Proposal sent',
+      desc: agreement.moneybirdQuoteRef ? `Quote ${agreement.moneybirdQuoteRef} sent to client` : 'Proposal sent to client',
+      preview: 'proposal',
+    });
+    if (agreement.acceptedAt) ev.push({
+      key: 'signed', date: agreement.acceptedAt, icon: 'signed', title: 'Proposal signed & accepted',
+      desc: agreement.acceptedBy ? `Signed by ${agreement.acceptedBy}` : 'Proposal accepted', preview: 'proposal',
+    });
+  }
+  if (lead.convertedAt) ev.push({
+    key: 'client', date: lead.convertedAt, icon: 'client', title: 'Converted to client',
+    desc: 'Lead became a full client with portal access',
+  });
+  return ev.filter((e) => e.date).sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+function JourneyTimeline({ events, onPreview }) {
+  return (
+    <div className={styles.journeySection}>
+      <div className={styles.journeyHeader}>Lead Journey — full history from enquiry to client</div>
+      <div className={styles.journeyList}>
+        {events.map((e) => {
+          const Icon = JOURNEY_ICONS[e.icon] || FileText;
+          return (
+            <div key={e.key} className={styles.journeyItem}>
+              <div className={styles.journeyDot}>
+                <Icon size={14} strokeWidth={2} />
+              </div>
+              <div className={styles.journeyBody}>
+                <div className={styles.journeyRow}>
+                  <span className={styles.journeyTitle}>{e.title}</span>
+                  <span className={styles.journeyDate}>{formatTimestamp(e.date)}</span>
+                </div>
+                <span className={styles.journeyDesc}>{e.desc}</span>
+                {e.preview && (
+                  <button className={styles.journeyPreviewBtn} type="button" onClick={() => onPreview(e.preview)}>
+                    <FileText size={13} />
+                    Preview {e.preview === 'form' ? 'service form' : 'proposal'}
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Component ────────────────────────────────────────────────────────
 export default function ClientProfile({ initialTab = 'timeline' }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { clients, agreements } = useData();
+  const { clients, agreements, portals, leads } = useData();
 
   const client = clients.find((c) => String(c.id) === String(id));
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [leftTab, setLeftTab] = useState('contacts'); // 'contacts' | 'details'
+  const [showProposalModal, setShowProposalModal] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false);
 
   // Edit details state
   const { addRequests, getPendingForClient } = useChangeRequests();
@@ -369,8 +459,27 @@ export default function ClientProfile({ initialTab = 'timeline' }) {
     );
   }
 
-  const portal = client.portalId ? findPortalById(client.portalId) : null;
+  // Portal comes from live state so a just-converted client's portal resolves.
+  const portal = client.portalId ? portals.find((p) => p.id === client.portalId) || null : null;
   const agreement = agreements.find((a) => a.portalId === client.portalId) || null;
+
+  // The originating lead carries the enquiry, service form, and journey timestamps.
+  const originLead = leads.find((l) => l.convertedTo === client.id) || null;
+  const leadLike = originLead || {
+    companyName: client.companyName,
+    contactPerson: client.contacts?.find((c) => c.starred)?.name || client.contacts?.[0]?.name || '',
+    location: client.address,
+    serviceDetailsForm: client.serviceDetailsForm || null,
+    serviceFormId: client.serviceFormId || null,
+  };
+  const journey = buildJourney(originLead, agreement);
+  const hasServiceForm = Boolean(leadLike.serviceDetailsForm);
+
+  function handleJourneyPreview(kind) {
+    if (kind === 'form') setShowFormModal(true);
+    else setShowProposalModal(true);
+  }
+
   const pendingRequests = getPendingForClient(client.id);
   const hasPending = pendingRequests.length > 0;
   const clientDepts = departments.filter((d) => client.departments.includes(d.name));
@@ -615,6 +724,11 @@ export default function ClientProfile({ initialTab = 'timeline' }) {
         <main className={styles.centrePanel}>
           {activeTab === 'timeline' && (
             <>
+              {/* Lead journey — full lead→client paper trail (converted clients) */}
+              {journey.length > 0 && (
+                <JourneyTimeline events={journey} onPreview={handleJourneyPreview} />
+              )}
+
               <div className={styles.centreHeader}>
                 <span>Activity of all </span>
                 <strong>#notes and complaints</strong>
@@ -698,7 +812,32 @@ export default function ClientProfile({ initialTab = 'timeline' }) {
                 </div>
               ) : (
                 <>
-                  {/* ── Header row ── */}
+                  {/* ── Documents — preview the service form and the proposal ── */}
+                  <div className={styles.docPreviewBar}>
+                    <span className={styles.docPreviewLabel}>Documents</span>
+                    <div className={styles.docPreviewBtns}>
+                      <button
+                        type="button"
+                        className={styles.docPreviewBtn}
+                        onClick={() => setShowFormModal(true)}
+                        disabled={!hasServiceForm}
+                        title={hasServiceForm ? '' : 'No service detail form on file'}
+                      >
+                        <FileText size={15} />
+                        Service Detail Form
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.docPreviewBtn}
+                        onClick={() => setShowProposalModal(true)}
+                      >
+                        <FilePen size={15} />
+                        Service Proposal
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* ── Header row — the official, signed agreement ── */}
                   <div className={styles.agreementHeader}>
                     <div className={styles.agreementHeaderLeft}>
                       <span className={`${styles.agStatusBadge} ${styles[`agStatus_${agreement.status}`]}`}>
@@ -845,15 +984,13 @@ export default function ClientProfile({ initialTab = 'timeline' }) {
                       <p className={styles.portalActionText}>
                         View this client's portal in management mode. No login required.
                       </p>
-                      <a
-                        href={`/portal/${portal.id}?mgmt=true`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        to={`/portal/${portal.id}?mgmt=true`}
                         className={styles.openPortalBtn}
                       >
                         <ExternalLink size={15} />
                         Open Portal
-                      </a>
+                      </Link>
                     </div>
 
                     <div className={styles.portalActionCardActive}>
@@ -982,6 +1119,19 @@ export default function ClientProfile({ initialTab = 'timeline' }) {
           )}
         </aside>
       </div>
+
+      {/* ── Document preview modals ── */}
+      <ServiceFormView
+        isOpen={showFormModal}
+        onClose={() => setShowFormModal(false)}
+        lead={leadLike}
+      />
+      <ProposalPreview
+        isOpen={showProposalModal}
+        onClose={() => setShowProposalModal(false)}
+        lead={leadLike}
+        proposal={agreement}
+      />
 
       {/* ── Toast ── */}
       {showToast && (

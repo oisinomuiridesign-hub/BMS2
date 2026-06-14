@@ -70,7 +70,7 @@ export const leads = [
     contactPhone: '+31 6 36 44 55 66',
     location: 'Beemsterhoek 4, 5706 DN Helmond',
     leadSource: 'WEBSITE_FORM',
-    status: 'DETAILS_SUBMITTED',
+    status: 'UNDER_REVIEW',
     assignedTo: 3,
     createdAt: '2026-02-18T13:45:00Z',
     updatedAt: '2026-03-04T11:30:00Z',
@@ -79,6 +79,7 @@ export const leads = [
     avatarInitials: 'BL',
     avatarColor: '#e09915',
     lastActivity: '2026-03-04T11:30:00Z',
+    serviceFormId: 'SDF-2026-0003',
     // Form 1
     enquiryForm: {
       fleetSize: 42,

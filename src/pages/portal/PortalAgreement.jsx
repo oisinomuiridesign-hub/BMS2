@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { isStageAvailable } from '../../components/portal/PortalShell';
 import { usePortalAuth } from '../../context/PortalAuthContext';
+import { useData } from '../../context/DataContext';
 import { findAgreementByPortalId } from '../../data/portal/agreements';
 import sectionStyles from './PortalSection.module.css';
 import styles from './PortalAgreement.module.css';
@@ -90,10 +91,13 @@ function ConfirmAcceptModal({ companyName, onCancel, onConfirm }) {
 export default function PortalAgreement() {
   const { portal } = useOutletContext();
   const { portalUser, isManagementView } = usePortalAuth();
+  const { agreements } = useData();
   const available = isStageAvailable(portal.stage, 'CONTRACT_REVIEW');
 
-  // Load agreement data
-  const seedAgreement = findAgreementByPortalId(portal.id);
+  // Load agreement data — prefer live state so a just-converted client's signed
+  // agreement shows here, falling back to the static fixtures.
+  const seedAgreement =
+    agreements.find((a) => a.portalId === portal.id) || findAgreementByPortalId(portal.id);
 
   // ── Component state ─────────────────────────────────────────────────────────
   const [agreementStatus, setAgreementStatus] = useState(

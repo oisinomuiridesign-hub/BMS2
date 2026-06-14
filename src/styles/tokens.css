@@ -1,79 +1,124 @@
 /* ===================================================
    BMS Design System Tokens
    Source: Extracted from production Figma design system
+   Docs:   docs/DESIGN_SYSTEM.md
    =================================================== */
 
 :root {
-  /* === Brand Colors — Primary === */
-  --primary-0: #004d78;
-  --primary-10: #0082ca;
-  --primary-20: #52bcf7;
-  --primary-50: #e2f3f8;
-  --primary-60: #f3fafc;
 
-  /* === Neutrals === */
-  --neutral-0: #060b14;
-  --neutral-10: #12213d;
-  --neutral-20: #344667;
-  --neutral-30: #8ca0c4;
-  --neutral-40: #cbd8f0;
-  --neutral-50: #dfe7f6;
-  --neutral-60: #f3f5f9;
-  --neutral-70: #f9fafc;
-  --neutral-80: #fcfcfd;
-  --neutral-100: #ffffff;
+  /* ─── Brand Colors — Primary ─────────────────────────
+     The blue ramp. --primary-10 is the "hero" brand color
+     used for primary buttons, links, active nav items,
+     and accent borders. The scale goes from dark (0) to
+     near-white (60), used for hover states and washes.
+     ──────────────────────────────────────────────────── */
+  --primary-0: #004d78;      /* Darkest blue — primary button hover, active states       */
+  --primary-10: #0082ca;     /* ★ Main brand blue — primary buttons, links, accents      */
+  --primary-20: #52bcf7;     /* Light blue — active indicators, sidebar active accent     */
+  --primary-50: #e2f3f8;     /* Blue wash — secondary button hover bg                    */
+  --primary-60: #f3fafc;     /* Near-white blue — subtle highlighted backgrounds          */
 
-  /* === Alerts === */
-  --alert-warning-primary: #e09915;
-  --alert-warning-secondary: #fff6e5;
-  --alert-error-primary: #ef6461;
-  --alert-error-secondary: #fdf2f2;
-  --alert-success-primary: #27ae60;
-  --alert-success-secondary: #e8f8ef;
+  /* ─── Neutrals ────────────────────────────────────────
+     Navy-to-white ramp. The lower end (0-20) is used for
+     text and the dark sidebar. Mid-range (30-50) for
+     borders, placeholders, and dividers. Upper end (60-100)
+     for page backgrounds and card surfaces.
+     ──────────────────────────────────────────────────── */
+  --neutral-0: #060b14;      /* Near-black — body text (aliased as --text-dark-primary)   */
+  --neutral-10: #12213d;     /* ★ Dark navy — sidebar background                         */
+  --neutral-20: #344667;     /* Dark gray-blue — secondary text, sidebar nav hover        */
+  --neutral-30: #8ca0c4;     /* Mid gray-blue — placeholders, muted labels, ghost buttons */
+  --neutral-40: #cbd8f0;     /* Light gray-blue — borders, dividers, scrollbar thumb      */
+  --neutral-50: #dfe7f6;     /* Lighter — card borders, table row separators              */
+  --neutral-60: #f3f5f9;     /* ★ Page background — main content area bg, scrollbar track */
+  --neutral-70: #f9fafc;     /* Off-white — alternate card backgrounds                   */
+  --neutral-80: #fcfcfd;     /* Near-white — very subtle surface variation                */
+  --neutral-100: #ffffff;    /* Pure white — card surfaces, button text on blue bg        */
 
-  /* === Secondary === */
-  --secondary-red-10: #ef6461;
-  --secondary-red-30: #fdf2f2;
-  --secondary-orange: #e09915;
+  /* ─── Alerts / Status ─────────────────────────────────
+     Each alert has a "primary" (text/icon color) and
+     "secondary" (soft background) pair. Used in StatusBadge,
+     LeadStatusBadge, toast messages, and inline alerts.
+     ──────────────────────────────────────────────────── */
+  --alert-warning-primary: #e09915;   /* Amber — pending badges, warning text              */
+  --alert-warning-secondary: #fff6e5; /* Soft amber bg — pending badge background           */
+  --alert-error-primary: #ef6461;     /* Red — inactive/error badges, destructive actions   */
+  --alert-error-secondary: #fdf2f2;   /* Soft red bg — inactive badge background            */
+  --alert-success-primary: #27ae60;   /* Green — active/success badges, confirmation        */
+  --alert-success-secondary: #e8f8ef; /* Soft green bg — active badge background            */
 
-  /* === Text === */
-  --text-light-primary: #f9fafc;
-  --text-dark-primary: #060b14;
-  --text-dark-secondary: rgba(0, 0, 0, 0.5);
+  /* ─── Secondary (aliases) ─────────────────────────────
+     Legacy aliases that duplicate alert tokens above.
+     Prefer using --alert-* tokens in new code.
+     ──────────────────────────────────────────────────── */
+  --secondary-red-10: #ef6461;  /* Same as --alert-error-primary    */
+  --secondary-red-30: #fdf2f2;  /* Same as --alert-error-secondary  */
+  --secondary-orange: #e09915;  /* Same as --alert-warning-primary  */
 
-  /* === Border Radius === */
+  /* ─── Text Colors ─────────────────────────────────────
+     Semantic text tokens. Use these instead of raw neutrals
+     when setting text color so intent is clear.
+     ──────────────────────────────────────────────────── */
+  --text-light-primary: #f9fafc;       /* White text on dark surfaces (sidebar, dark cards)  */
+  --text-dark-primary: #060b14;        /* ★ Default body text on light backgrounds           */
+  --text-dark-secondary: rgba(0, 0, 0, 0.5); /* Muted/secondary text, captions, timestamps  */
+
+  /* ─── Border Radius ───────────────────────────────────
+     s → inputs, small elements
+     m → DEFAULT: cards, buttons, dropdowns, modals
+     l → larger cards, modal panels, hero sections
+     100 → pills, badges, avatars (fully rounded)
+     ──────────────────────────────────────────────────── */
   --radius-s: 4px;
-  --radius-m: 8px;
+  --radius-m: 8px;       /* ★ Default radius for most UI elements   */
   --radius-l: 12px;
-  --radius-100: 100px;
+  --radius-100: 100px;   /* Fully rounded — StatusBadge, AvatarInitials */
 
-  /* === Shadows === */
-  --shadow-float: 0px 0px 20px 0px rgba(7, 36, 89, 0.05);
-  --shadow-card: 0 2px 8px rgba(7, 36, 89, 0.06);
-  --shadow-card-hover: 0 4px 16px rgba(7, 36, 89, 0.10);
+  /* ─── Shadows ─────────────────────────────────────────
+     All shadows use the brand navy hue (rgb 7,36,89) for
+     consistency. Cards get --shadow-card at rest and
+     --shadow-card-hover on mouse-over.
+     ──────────────────────────────────────────────────── */
+  --shadow-float: 0px 0px 20px 0px rgba(7, 36, 89, 0.05);  /* Floating menus, dropdowns   */
+  --shadow-card: 0 2px 8px rgba(7, 36, 89, 0.06);           /* ★ Default card elevation    */
+  --shadow-card-hover: 0 4px 16px rgba(7, 36, 89, 0.10);    /* Card hover / active state   */
 
-  /* === Typography === */
-  --font-heading: 'Archivo', sans-serif;
-  --font-body: 'Montserrat', sans-serif;
-  --font-accent: 'Open Sans', sans-serif;
+  /* ─── Typography ──────────────────────────────────────
+     Three font stacks. --font-body (Montserrat) is the
+     global default set on <body>. --font-heading (Archivo)
+     is for page titles (TopBar h1) and card headings.
+     --font-accent (Open Sans) is used sparingly.
+     ──────────────────────────────────────────────────── */
+  --font-heading: 'Archivo', sans-serif;     /* TopBar titles, card headings, avatar text   */
+  --font-body: 'Montserrat', sans-serif;     /* ★ Global default — body, buttons, inputs    */
+  --font-accent: 'Open Sans', sans-serif;    /* Rarely used — accent text only              */
 
-  --text-xs: 11px;
-  --text-sm: 14px;
-  --text-md: 16px;
-  --text-lg: 18px;
-  --text-xl: 22px;
-  --text-xxl: 28px;
+  /* Font sizes — --text-sm (14px) is the global default
+     set on <body> in global.css. Scale is intentionally
+     tight (11–28px) for a data-dense dashboard UI.        */
+  --text-xs: 11px;     /* Badge labels, fine print, table captions    */
+  --text-sm: 14px;     /* ★ Default body text, button labels, inputs  */
+  --text-md: 16px;     /* Slightly larger body, form field labels      */
+  --text-lg: 18px;     /* Sub-headings, card titles                    */
+  --text-xl: 22px;     /* Section headings                             */
+  --text-xxl: 28px;    /* Page titles (TopBar h1)                      */
 
-  /* === Spacing Scale === */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-xxl: 48px;
+  /* ─── Spacing Scale ───────────────────────────────────
+     4px base. Use these instead of magic numbers.
+     --space-md (16px) is the most common gap/padding.
+     ──────────────────────────────────────────────────── */
+  --space-xs: 4px;     /* Tight: icon-to-text gap, badge padding        */
+  --space-sm: 8px;     /* Small: between inline badges, compact lists   */
+  --space-md: 16px;    /* ★ Default: section padding, form field gaps   */
+  --space-lg: 24px;    /* Card padding, page content gutters            */
+  --space-xl: 32px;    /* Large section separators                      */
+  --space-xxl: 48px;   /* Page-level vertical rhythm                    */
 
-  /* === Layout === */
-  --sidebar-width: 280px;
-  --sidebar-collapsed: 72px;
-  --topbar-height: auto;
+  /* ─── Layout ──────────────────────────────────────────
+     Fixed sidebar widths used in AppShell.module.css.
+     Sidebar toggles between expanded and collapsed.
+     ──────────────────────────────────────────────────── */
+  --sidebar-width: 280px;      /* Sidebar expanded width  */
+  --sidebar-collapsed: 72px;   /* Sidebar collapsed width */
+  --topbar-height: auto;       /* TopBar is content-sized */
 }

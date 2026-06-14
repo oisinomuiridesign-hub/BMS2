@@ -5,6 +5,7 @@ import {
   Users,
   Building2,
   UserSquare,
+  Bell,
   Settings,
   LogOut,
   ChevronLeft,
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { label: 'Clients', icon: Users, to: '/clients' },
   { label: 'Department', icon: Building2, to: '/departments' },
   { label: 'Employees', icon: UserSquare, to: '/employees' },
+  { label: 'Notifications', icon: Bell, to: '/notifications' },
 ];
 
 const BOTTOM_NAV = [
